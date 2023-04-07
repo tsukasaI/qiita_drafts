@@ -1,3 +1,10 @@
+---
+marp: true
+theme: gaia
+header: "OSSにコントリビューションした話"
+footer: "by **＠tsukasaI**"
+---
+
 # はじめに
 
 OSSに初コントリビュートをした感想と簡単な流れについて記述する。
@@ -28,28 +35,27 @@ PHP, Java, Rubyなど超有名プログラミング言語もOSS
 
 **OSS コミット やり方** で検索してみた
 
-だいたい以下のステップ
-
-- コントリビュートできそうなissueを報告しているOSSをGitHubで探す
+- OSSを探す
   - [good first issue](https://goodfirstissue.dev/)
   - [Github Help Wanted](http://github-help-wanted.com/)
   - [GitHub](https://github.com/)
-- issueを見つけたら「私がやります！」宣言をする
+- 「私がやります！」宣言をする
 - 作業をして取り込み依頼を出す
 
 ---
 
 ## good first issue とは
 GitHubのissueのラベルのうち `good first issue` が含まれるものをまとめてくれているページ
-good first issueは`初めてのコントリビュートに向いている Issue につけられる`ラベル
+
+*good first issueは`初めてのコントリビュートに向いている Issue につけられる`ラベル
 
 ---
 
-## issueを選び方
+## issueの選び方
 もちろん何でもコントリビュートできる訳ではない
 ケイパや興味で選ぶ必要がある
 
-個人的には
+僕の属性
 - 得意なのはGo, TypeScript, DevOps(GitHub Actions)
 - 興味があるのはテスト、スクレイピング、ORM、HTTPフレームワーク
 
@@ -67,16 +73,37 @@ good first issueは`初めてのコントリビュートに向いている Issue
 ---
 
 # 実際にコントリビュートしたものたち
+
+---
+
 ## Goのテストコードの修正
 https://github.com/MontFerret/ferret/pull/781
 https://github.com/gavv/httpexpect/pull/347
 
+テストコードの軽微な修正
+
+---
+
 ## GitHub Actions Warningの修正
 https://github.com/fairhive-labs/go-pixelart/pull/16
 
+実は10月にプロジェクトで行なった作業と全く同じ
+
+---
 ## 不要な引数の削除
 https://github.com/apache/camel-k/pull/4155
+
+未使用の関数の引数を削除するだけ
 なんとapacheのリポジトリにコントリビュート
+
+---
+
+# 感想
+- Thank you というコメントが嬉しい
+- 初めてで緊張したが楽しかった
+- Thank you というコメントが嬉しい
+- 会ったことない人とものつくりできるの楽しい
+- Thank you というコメントが嬉しい
 
 ---
 
