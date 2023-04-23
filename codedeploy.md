@@ -46,8 +46,7 @@ name: CodeDeploy Caller
 on:
   push:
     branches:
-      # - develop
-      - '**'
+      - develop
 
 jobs:
   codedeploy:
@@ -56,27 +55,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 2
-
-      - name: get build required files
-        id: get-build-required-files
-        run: |
-          BaseHash=`git merge-base HEAD HEAD^`
-          BuildRequiredFiles=`git diff --name-only HEAD $BaseHash | egrep '\.(scss|vue)$' | head -n1 || echo ''`
-
-          echo "BuildRequiredFiles=$BuildRequiredFiles" >> $GITHUB_OUTPUT
 
       - name: CodeDeploy
-        if: ${{ steps.get-build-required-files.outputs.BuildRequiredFiles == '' }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ap-northeast-1
         run: |
           aws deploy create-deployment \
-            --application-name stg-rank_king-app \
-            --deployment-group-name rank_king_group \
+            --application-name stg-sample_app-app \
+            --deployment-group-name sample_app_group \
             --github-location repository=${{github.repository}},commitId=${{github.sha}} \
             --region ap-northeast-1 \
             --file-exists-behavior OVERWRITE
@@ -97,22 +85,35 @@ hooks:
       timeout: 300
       runas: root
   AfterInstall:
-    - location: scripts/change_permissions.sh
-    - location: scripts/set_env.sh
-    - location: scripts/start_container.sh
-    - location: scripts/clear_cache.sh
-    - location: scripts/execute_migration.sh
+    - location: scripts/start_app.sh
       timeout: 600
       runas: root
 ```
 
+## shellの設定
+
+```sh:scripts/start_app.sh
+#!/bin/bash
+
+# permissionの変更
+chown -R ec2-user:ec2-user /var/www/code_deploy_test
+chmod -R 777 /var/www/code_deploy_test/laravel/storage
+docker exec prd_sample_app_php php artisan migrate
+
+# アプリケーションのスタート
+cd /var/www/code_deploy_test/docker/production
+docker-compose up -d
+docker image prune -f
+docker volume prune -f
+```
+
 ## CodeDeployの設定
-```terraform
+```terraform:main.tf
 # ----------------------------------
 # IAM
 # ----------------------------------
-resource "aws_iam_role" "rank_king_deploy_role" {
-  name = "rank_king_deploy_role-role"
+resource "aws_iam_role" "sample_app_deploy_role" {
+  name = "sample_app_deploy_role-role"
 
   assume_role_policy = <<EOF
 {
@@ -133,22 +134,22 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "code_deploy_policy_attachments" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
-  role       = aws_iam_role.rank_king_deploy_role.name
+  role       = aws_iam_role.sample_app_deploy_role.name
 }
 
 
 # ----------------------------------
 # CodeDeploy
 # ----------------------------------
-resource "aws_codedeploy_app" "rank_king" {
-  name = "stg-rank_king-app"
+resource "aws_codedeploy_app" "sample_app" {
+  name = "stg-sample_app-app"
 }
 
 
-resource "aws_codedeploy_deployment_group" "rank_king_deploy_group" {
-  app_name              = aws_codedeploy_app.rank_king.name
-  deployment_group_name = "rank_king_group"
-  service_role_arn      = aws_iam_role.rank_king_deploy_role.arn
+resource "aws_codedeploy_deployment_group" "sample_app_deploy_group" {
+  app_name              = aws_codedeploy_app.sample_app.name
+  deployment_group_name = "sample_app_group"
+  service_role_arn      = aws_iam_role.sample_app_deploy_role.arn
 
   ec2_tag_set {
     ec2_tag_filter {
@@ -173,7 +174,7 @@ resource "aws_codestarnotifications_notification_rule" "stg-rank-codedeploy" {
   ]
 
   name     = "stg-rank-codedeploy"
-  resource = "arn:aws:codedeploy:ap-northeast-1:536168187560:application:stg-rank_king-app"
+  resource = "arn:aws:codedeploy:ap-northeast-1:536168187560:application:stg-sample_app-app"
 
   target {
     address = "arn:aws:chatbot::536168187560:chat-configuration/slack-channel/stg-codedeploy"
