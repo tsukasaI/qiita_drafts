@@ -1,13 +1,34 @@
 ---
 marp: true
-theme: gaia
-header: "OSSにコントリビューションした話"
+header: "OSS contribute debut"
 footer: "by **＠tsukasaI**"
+class: invert
+---
+
+# OSSコントリビュートデビュー・俺の話を聞いてくれ
+
+## MSD/SDU 井上
+
 ---
 
 # はじめに
 
 OSSに初コントリビュートをした感想と簡単な流れについて記述する。
+
+## お断り
+- 本LTはエンジニアであるスピーカーが自慢をたれ流す時間がほとんどです。
+- 質問は思いつかないかもなので実況チャンネルには感想とか昨日の夕食とかツッコミとかwelcomeです。
+- gitの用語がわからなかったら後で連絡してください。丁寧にお答えします。
+
+---
+# Agenda
+
+- OSSとは
+- OSSコントリビュートとは
+- 具体的に何やったん？
+- 実際にコントリビュートしたものたち
+- 感想
+- 最後に
 
 ---
 
@@ -21,12 +42,25 @@ PHP, Java, Rubyなど超有名プログラミング言語もOSS
 
 ---
 
+# OSSコントリビュートとは
+
+文字通りにOSSの開発の手助けをすること
+
+例えば
+
+- バグの修正
+- 新機能の追加
+- ソースコードのリファクタリング
+- ドキュメントの修正（Typo、翻訳）
+
+---
+
 # 具体的に何やったん？
 
 色々頑張ったけど要約すると以下が効果あった
 
 - やり方をググる
-- [good first issue](https://goodfirstissue.dev)をdigった
+- コントリビュートできるまとめページをdigった
 - すぐにリポジトリをforkして変更作業着手
 
 ---
@@ -35,12 +69,10 @@ PHP, Java, Rubyなど超有名プログラミング言語もOSS
 
 **OSS コミット やり方** で検索してみた
 
-- OSSを探す
+- コントリビュートできそうなOSSを探す = issueを報告しているOSSを探す
   - [good first issue](https://goodfirstissue.dev/)
   - [Github Help Wanted](http://github-help-wanted.com/)
   - [GitHub](https://github.com/)
-- 「私がやります！」宣言をする
-- 作業をして取り込み依頼を出す
 
 ---
 
@@ -64,7 +96,7 @@ GitHubのissueのラベルのうち `good first issue` が含まれるものを�
 ## 変更作業
 私がやった流れは以下
 
-1. とりあえず`Can I take this? :)`と投稿する
+1. とりあえず`Can I take this?`と投稿する
 1. コントリビュートのルールを確認する (Readmeを読む)
 1. 間髪を入れずリポジトリをfork（自分のアカウント配下にコピー）する
 1. ブランチを切って変更作業をする
