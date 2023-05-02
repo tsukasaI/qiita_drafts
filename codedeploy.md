@@ -63,7 +63,7 @@ jobs:
           AWS_REGION: ap-northeast-1
         run: |
           aws deploy create-deployment \
-            --application-name stg-sample_app-app \
+            --application-name sample_app-app \
             --deployment-group-name sample_app_group \
             --github-location repository=${{github.repository}},commitId=${{github.sha}} \
             --region ap-northeast-1 \
@@ -142,7 +142,7 @@ resource "aws_iam_role_policy_attachment" "code_deploy_policy_attachments" {
 # CodeDeploy
 # ----------------------------------
 resource "aws_codedeploy_app" "sample_app" {
-  name = "stg-sample_app-app"
+  name = "sample_app-app"
 }
 
 
@@ -165,7 +165,7 @@ resource "aws_codedeploy_deployment_group" "sample_app_deploy_group" {
   }
 }
 
-resource "aws_codestarnotifications_notification_rule" "stg-rank-codedeploy" {
+resource "aws_codestarnotifications_notification_rule" "rank-codedeploy" {
   detail_type = "FULL"
   event_type_ids = [
     "codedeploy-application-deployment-failed",
@@ -173,11 +173,11 @@ resource "aws_codestarnotifications_notification_rule" "stg-rank-codedeploy" {
     "codedeploy-application-deployment-succeeded",
   ]
 
-  name     = "stg-rank-codedeploy"
-  resource = "arn:aws:codedeploy:ap-northeast-1:536168187560:application:stg-sample_app-app"
+  name     = "rank-codedeploy"
+  resource = "arn:aws:codedeploy:ap-northeast-1:536168187560:application:sample_app-app"
 
   target {
-    address = "arn:aws:chatbot::536168187560:chat-configuration/slack-channel/stg-codedeploy"
+    address = "arn:aws:chatbot::536168187560:chat-configuration/slack-channel/codedeploy"
     type    = "AWSChatbotSlack"
   }
 }
