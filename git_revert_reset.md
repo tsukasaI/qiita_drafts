@@ -88,4 +88,4 @@ pick ${commit hash} ${commit message}
 pick ${commit hash} ${commit message}
 ```
 
-ここで削除したいコミットをエディタで行を削除することでコミットの削除が可能
+ここで削除したいコミットをエディタで行を `pick` から `d` に変更することでコミットの削除が可能
