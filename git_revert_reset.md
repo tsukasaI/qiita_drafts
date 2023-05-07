@@ -85,6 +85,7 @@ git reset --soft HEAD^
 gitには以下で定義されている
 
 `Reapply commits on top of another base tip`
+
 （なるほど、わからん）
 
 一つ前のコミットを打ち消す場合は以下の操作
