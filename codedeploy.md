@@ -38,6 +38,10 @@ EC2, ECS, Lambdaなどにソフトウェアをデプロイすることができ�
 1. GutHub Actionsで本番ブランチへのプッシュをトリガーにCodeDeployを起動
 1. appspec.yamlに従いコマンドを実行
 
+## Github Actions の設定
+
+リポジトリのSettings > Secrets > Actions でクレデンシャルを保存。
+
 ## workflowの設定
 
 ```yaml
