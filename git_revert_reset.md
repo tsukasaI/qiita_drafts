@@ -5,7 +5,7 @@
 以下の3つが使える
 
 ```sh
-gir revert HEAD
+git revert HEAD
 
 git reset --hard HEAD^
 
