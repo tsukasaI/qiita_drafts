@@ -28,7 +28,7 @@ https://github.com/cosmtrek/air
 ## 使用する技術
 
 Go v1.20
-Gin(GoのHttpフレームワーク) v1.9.0
+Gin v1.9.0 (GoのHttpフレームワーク、本記事での説明は割愛する)
 Docker
 docker-compose
 
@@ -38,6 +38,7 @@ docker-compose up コマンドを実行するとAPIサーバーが起動し
 ソースコードを変更したときに自動で再ビルドして変更が反映される
 
 # 各ファイルの紹介
+
 ディレクトリ構成
 
 ```
@@ -166,5 +167,4 @@ require (
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
 ```
