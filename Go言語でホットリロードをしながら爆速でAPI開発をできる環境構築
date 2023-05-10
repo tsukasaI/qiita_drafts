@@ -25,4 +25,146 @@ https://github.com/cosmtrek/air
 
 本記事ではAirを用いたAPIサーバー開発環境の構築方法を紹介します。
 
+## 使用する技術
+
+Go v1.20
+Gin(GoのHttpフレームワーク) v1.9.0
+Docker
+docker-compose
+
+## 本記事のゴール
+
+docker-compose up コマンドを実行するとAPIサーバーが起動し
+ソースコードを変更したときに自動で再ビルドして変更が反映される
+
 # 各ファイルの紹介
+ディレクトリ構成
+
+```
+.
+├── Dockerfile
+├── docker-compose.yaml
+├── go.mod
+├── go.sum
+├── main.go
+```
+
+```Dockerfile
+FROM golang:1.20.4-bullseye
+
+RUN go install github.com/cosmtrek/air@latest
+```
+
+```yaml:docker-compose.yaml
+version: "3.8"
+
+services:
+  go:
+    container_name: air_sample
+    volumes:
+      - ./:/project/
+    working_dir: /project
+    tty: true
+    build: "./"
+    ports:
+      - 8080:8080
+    command: sh -c 'go mod tidy && air'
+```
+
+```toml:.air.toml
+root = "."
+testdata_dir = "testdata"
+tmp_dir = "tmp"
+
+[build]
+  args_bin = []
+  bin = "./tmp/main"
+  cmd = "go build -o ./tmp/main ."
+  delay = 0
+  exclude_dir = ["assets", "tmp", "vendor", "testdata"]
+  exclude_file = []
+  exclude_regex = ["_test.go"]
+  exclude_unchanged = false
+  follow_symlink = false
+  full_bin = ""
+  include_dir = []
+  include_ext = ["go", "tpl", "tmpl", "html"]
+  include_file = []
+  kill_delay = "0s"
+  log = "build-errors.log"
+  poll = false
+  poll_interval = 0
+  rerun = false
+  rerun_delay = 500
+  send_interrupt = false
+  stop_on_error = false
+
+[color]
+  app = ""
+  build = "yellow"
+  main = "magenta"
+  runner = "green"
+  watcher = "cyan"
+
+[log]
+  main_only = false
+  time = false
+
+[misc]
+  clean_on_exit = false
+
+[screen]
+  clear_on_rebuild = false
+  keep_scroll = true
+```
+
+```go:main.go
+package main
+
+import "github.com/gin-gonic/gin"
+
+func main() {
+	r := gin.Default()
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
+	r.Run()
+}
+```
+
+```mod:go.mod
+module air_sample
+
+go 1.20
+
+require github.com/gin-gonic/gin v1.9.0
+
+require (
+	github.com/bytedance/sonic v1.8.0 // indirect
+	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
+	github.com/gin-contrib/sse v0.1.0 // indirect
+	github.com/go-playground/locales v0.14.1 // indirect
+	github.com/go-playground/universal-translator v0.18.1 // indirect
+	github.com/go-playground/validator/v10 v10.11.2 // indirect
+	github.com/goccy/go-json v0.10.0 // indirect
+	github.com/json-iterator/go v1.1.12 // indirect
+	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
+	github.com/leodido/go-urn v1.2.1 // indirect
+	github.com/mattn/go-isatty v0.0.17 // indirect
+	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
+	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/pelletier/go-toml/v2 v2.0.6 // indirect
+	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
+	github.com/ugorji/go/codec v1.2.9 // indirect
+	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
+	golang.org/x/crypto v0.5.0 // indirect
+	golang.org/x/net v0.7.0 // indirect
+	golang.org/x/sys v0.5.0 // indirect
+	golang.org/x/text v0.7.0 // indirect
+	google.golang.org/protobuf v1.28.1 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
+)
+
+```
