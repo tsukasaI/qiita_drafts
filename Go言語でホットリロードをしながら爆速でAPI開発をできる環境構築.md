@@ -72,6 +72,7 @@ services:
     command: sh -c 'go mod tidy && air'
 ```
 
+air init で作成した .air.toml
 ```toml:.air.toml
 root = "."
 testdata_dir = "testdata"
@@ -168,3 +169,80 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 ```
+
+# 動作チェック
+
+## httpサーバーが起動するか
+
+```
+$ docker compose up
+[+] Running 1/0
+ ✔ Container air_sample  Created                                     0.0s
+Attaching to air_sample
+air_sample  |
+air_sample  |   __    _   ___
+air_sample  |  / /\  | | | |_)
+air_sample  | /_/--\ |_| |_| \_ , built with Go
+air_sample  |
+air_sample  | watching .
+air_sample  | !exclude tmp
+air_sample  | building...
+air_sample  | running...
+air_sample  | [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+air_sample  |
+air_sample  | [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+air_sample  |  - using env:     export GIN_MODE=release
+air_sample  |  - using code:    gin.SetMode(gin.ReleaseMode)
+air_sample  |
+air_sample  | [GIN-debug] GET    /ping                     --> main.main.func1 (3 handlers)
+air_sample  | [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+air_sample  | Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+air_sample  | [GIN-debug] Environment variable PORT is undefined. Using port :8080 by default
+air_sample  | [GIN-debug] Listening and serving HTTP on :8080
+```
+
+```
+$ curl localhost:8080/ping
+{"message":"pong"}
+```
+
+
+dockerのターミナル
+```
+air_sample  | [GIN] 2023/05/10 - 04:35:23 | 200 |     367.667µs |      172.18.0.1 | GET      "/ping"
+```
+
+## ホットリロードが機能するか
+
+```go:main.go
+package main
+
+import "github.com/gin-gonic/gin"
+
+func main() {
+	r := gin.Default()
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
+	r.Run()
+}
+```
+に変更。入るを上書き保存をすると
+
+dockerのターミナル
+```
+air_sample  | main.go has changed
+air_sample  | building...
+air_sample  | main.go has changed
+air_sample  | running...
+```
+
+レスポンスの確認
+```
+$ curl localhost:8080/ping
+{"message":"pong updated"}
+```
+
+このように保存をすると自動でビルドをし直してサーバーが起動するようになった。
