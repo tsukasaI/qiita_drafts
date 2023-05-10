@@ -1,0 +1,28 @@
+# Go言語でホットリロードをしながら爆速でAPI開発をできる環境構築 ~Air, docekr-compose~
+
+## はじめに
+
+これまでGoの基礎の記事を公開してきた
+
+https://www.ariseanalytics.com/activities/report/20221005/
+https://www.ariseanalytics.com/activities/report/20220704/
+
+この記事では実際にGoでAPIを開発するときに使うツールを紹介する。
+
+## Goを用いる際の問題
+
+過去の記事でGoはコンパイラ言語であると紹介しました。
+
+APIサーバーを開発する際に問題になるのは「ソースコードの変更をする度にコンパイル操作をする必要がある」ことで開発効率を落としてしまいます。
+
+## Air
+
+そこで開発されたのがAirです。
+
+https://github.com/cosmtrek/air
+
+開発者はGoのAPIサーバーを構築時に即座にリロードがされないことに不満を感じホットリロードツールのAirを作りました。
+
+本記事ではAirを用いたAPIサーバー開発環境の構築方法を紹介します。
+
+# 各ファイルの紹介
