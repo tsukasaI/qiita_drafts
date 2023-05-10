@@ -1,10 +1,3 @@
----
-marp: true
-header: "OSS contribute debut"
-footer: "by **＠tsukasaI**"
-class: invert
----
-
 # OSSコントリビュートデビュー・俺の話を聞いてくれ
 
 ## MSD/SDU 井上

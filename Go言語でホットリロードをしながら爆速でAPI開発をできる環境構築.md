@@ -72,7 +72,7 @@ services:
     command: sh -c 'go mod tidy && air'
 ```
 
-air init で作成した .air.toml
+.air.toml（Airの設定ファイル）
 ```toml:.air.toml
 root = "."
 testdata_dir = "testdata"
@@ -119,6 +119,8 @@ tmp_dir = "tmp"
   clear_on_rebuild = false
   keep_scroll = true
 ```
+
+Ginのドキュメントのサンプルコードをそのまま記述する。
 
 ```go:main.go
 package main
@@ -201,11 +203,13 @@ air_sample  | [GIN-debug] Environment variable PORT is undefined. Using port :80
 air_sample  | [GIN-debug] Listening and serving HTTP on :8080
 ```
 
+このようにHttpサーバーが起動しました。
+実際にリクエストを実行するとレスポンスが返ってくることが確認できます。
+
 ```
 $ curl localhost:8080/ping
 {"message":"pong"}
 ```
-
 
 dockerのターミナル
 ```
