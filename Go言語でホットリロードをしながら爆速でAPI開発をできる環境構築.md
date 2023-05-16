@@ -1,41 +1,49 @@
 # Go言語でホットリロードをしながら爆速でAPI開発をできる環境構築 ~Air, docekr-compose~
 
+Marketing Solution Division所属のエンジニアの井上です。
+
+
 ## はじめに
 
-これまでGoの基礎の記事を公開してきた
+これまでARISE tech blogでは基礎的なGo記事を公開してきました。
 
 https://www.ariseanalytics.com/activities/report/20221005/
 https://www.ariseanalytics.com/activities/report/20220704/
 
-この記事では実際にGoでAPIを開発するときに使うツールを紹介する。
+今回はGo言語（以下Go）の応用編としてAPI開発をする際に使う便利なツールを紹介していきます。
+
+サンプルのコードもありますのでぜひお楽しみください。
 
 ## Goを用いる際の問題
 
 過去の記事でGoはコンパイラ言語であると紹介しました。
 
-APIサーバーを開発する際に問題になるのは「ソースコードの変更をする度にコンパイル操作をする必要がある」ことで開発効率を落としてしまいます。
+コンパイラ言語は一般的に実行時の処理速度が速く、Goはその速度からAPIサーバー開発言語に多くの企業で採用されています。
 
-## Air
+しかしAPIサーバーを開発する際に「ソースコードの変更をする度にコンパイル操作をする必要がある」という問題を抱えていて、開発効率を落としてしまいます。
 
 そこで開発されたのがAirです。
 
 https://github.com/cosmtrek/air
 
-開発者はGoのAPIサーバーを構築時に即座にリロードがされないことに不満を感じホットリロードツールのAirを作りました。
+Airの開発者はGoのAPIサーバーを構築時に即座にリロードがされないことに不満を感じホットリロードツールを作りました。
 
-本記事ではAirを用いたAPIサーバー開発環境の構築方法を紹介します。
+本記事ではそんなAirを用いたAPIサーバー開発環境の構築方法を紹介します。
 
-## 使用する技術
+## 実行条件
 
 Go v1.20
-Gin v1.9.0 (GoのHttpフレームワーク、本記事での説明は割愛する)
+Gin v1.9.0 (GoのHttpフレームワーク、本記事での説明は割愛します)
 Docker
 docker-compose
 
 ## 本記事のゴール
 
-docker-compose up コマンドを実行するとAPIサーバーが起動し
+docker-compose up コマンドを実行するとAPIサーバーが起動し、
 ソースコードを変更したときに自動で再ビルドして変更が反映される
+
+サンプルのコードはこちら
+https://github.com/ariseanalytics/air_sample
 
 # 各ファイルの紹介
 
@@ -152,7 +160,9 @@ air_sample  |   __    _   ___
 air_sample  |  / /\  | | | |_)
 air_sample  | /_/--\ |_| |_| \_ , built with Go
 air_sample  |
+
 ~中略~
+
 air_sample  | [GIN-debug] Listening and serving HTTP on :8080
 ```
 
