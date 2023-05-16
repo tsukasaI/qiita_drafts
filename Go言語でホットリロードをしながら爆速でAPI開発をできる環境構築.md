@@ -34,15 +34,15 @@ Airの開発者はGoのAPIサーバーを構築時に即座にリロードがさ
 
 Go v1.20
 Gin v1.9.0 (GoのHttpフレームワーク、本記事での説明は割愛します)
-Docker
-docker-compose
+Docker v23.0.5
+docker-compose v2.17.3
 
 ## 本記事のゴール
 
 docker-compose up コマンドを実行するとAPIサーバーが起動し、
-ソースコードを変更したときに自動で再ビルドして変更が反映される
+ソースコードを変更したときに自動で再ビルドして変更が反映されること。
 
-サンプルのコードはこちら
+サンプルのコードはこちら。
 https://github.com/ariseanalytics/air_sample
 
 # 各ファイルの紹介
@@ -57,6 +57,8 @@ https://github.com/ariseanalytics/air_sample
 ├── go.sum
 ├── main.go
 ```
+
+コンテナにgoコマンドを利用してairをインストールします。
 
 ```Dockerfile
 FROM golang:1.20.4-bullseye
@@ -80,7 +82,8 @@ services:
     command: sh -c 'go mod tidy && air'
 ```
 
-.air.toml（Airの設定ファイル）
+.air.tomlはAirの設定ファイルであり `air init` で生成したファイルをそのまま利用します。
+
 ```toml:.air.toml
 root = "."
 testdata_dir = "testdata"
@@ -128,7 +131,10 @@ tmp_dir = "tmp"
   keep_scroll = true
 ```
 
-Ginのドキュメントのサンプルコードをそのまま記述する。
+エントリーポイントのmain.goは以下のようにします。
+Ginのドキュメントのクイックスタートに記載のサンプルコードをそのまま記述しました。
+
+以下のように記述すると8080番ポートでhttpリクエストを待ち受けるようになります。
 
 ```go:main.go
 package main
@@ -149,6 +155,8 @@ func main() {
 # 動作チェック
 
 ## httpサーバーが起動するか
+
+コンテナを起動するために`docker compose up`を実行。
 
 ```
 $ docker compose up
@@ -190,7 +198,7 @@ func main() {
 	r := gin.Default()
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "pong",
+			"message": "pong updated",
 		})
 	})
 	r.Run()
@@ -212,4 +220,9 @@ $ curl localhost:8080/ping
 {"message":"pong updated"}
 ```
 
-このように保存をすると自動でビルドをし直してサーバーが起動するようになった。
+このように保存をすると自動でビルドをし直してサーバーが起動するようになりました。
+
+# 最後に
+
+今回はGoの応用事例としてAPIサーバーの開発に使う便利なツールを紹介しました。
+今後も近年ホットな技術の記事もアップしていきますので見に来てください！
