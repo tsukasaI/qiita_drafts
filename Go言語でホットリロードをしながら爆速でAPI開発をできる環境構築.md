@@ -1,53 +1,61 @@
-# Go言語でホットリロードをしながら爆速でAPI開発をできる環境構築 ~Air, docekr-compose~
+Go言語でホットリロードをしながら爆速でAPI開発をできる環境構築 ~Air, Docker, docekr-compose~
+
+はじめに
 
 Marketing Solution Division所属のエンジニアの井上です。
 
+これまでARISE tech blogでは基礎的なGo言語（以下Go）記事を公開してきました。
 
-## はじめに
+[【Go言語入門】「Go」の概要や特徴とは？社内のAPI開発プロジェクトで採用して分かったこと](https://www.ariseanalytics.com/activities/report/20221005/)
 
-これまでARISE tech blogでは基礎的なGo記事を公開してきました。
+[【Go言語入門】goroutineとは？ 実際に手を動かしながら goroutineの基礎を理解しよう！](https://www.ariseanalytics.com/activities/report/20220704/)
 
-https://www.ariseanalytics.com/activities/report/20221005/
-https://www.ariseanalytics.com/activities/report/20220704/
-
-今回はGo言語（以下Go）の応用編としてAPI開発をする際に使う便利なツールを紹介していきます。
+今回はGoの応用編としてAPI開発をする際に使う便利なツールを紹介していきます。
 
 サンプルのコードもありますのでぜひお楽しみください。
 
-## Goを用いる際の問題
+# GoでAPIを開発する際の問題
 
 過去の記事でGoはコンパイラ言語であると紹介しました。
 
 コンパイラ言語は一般的に実行時の処理速度が速く、Goはその速度からAPIサーバー開発言語に多くの企業で採用されています。
 
-しかしAPIサーバーを開発する際に「ソースコードの変更をする度にコンパイル操作をする必要がある」という問題を抱えていて、開発効率を落としてしまいます。
+しかしAPIサーバーを開発する際に「ソースコードの変更をする度にコンパイル操作をする必要がある」
 
-そこで開発されたのがAirです。
+という問題を抱えていて開発効率を落としてしまいます。
 
-https://github.com/cosmtrek/air
+そこで開発されたのが[Air](https://github.com/cosmtrek/air)です。
 
-Airの開発者はGoのAPIサーバーを構築時に即座にリロードがされないことに不満を感じホットリロードツールを作りました。
+開発者はGoのAPIサーバーを構築時に即座にリロードがされないことに不満を感じホットリロードツールを作りました。
 
 本記事ではそんなAirを用いたAPIサーバー開発環境の構築方法を紹介します。
 
-## 実行条件
+# 本記事のゴール
 
-Go v1.20
-Gin v1.9.0 (GoのHttpフレームワーク、本記事での説明は割愛します)
-Docker v23.0.5
-docker-compose v2.17.3
+docker-compose up コマンドを実行するとAPIサーバーが起動する。
 
-## 本記事のゴール
-
-docker-compose up コマンドを実行するとAPIサーバーが起動し、
-ソースコードを変更したときに自動で再ビルドして変更が反映されること。
+ソースコードを変更したときに自動で再ビルドして変更が反映される。
 
 サンプルのコードはこちら。
 https://github.com/ariseanalytics/air_sample
 
-# 各ファイルの紹介
 
-ディレクトリ構成
+# 構築
+
+## 実行条件
+
+Go v1.20
+
+Gin v1.9.0 (GoのHttpフレームワーク、本記事での説明は割愛します)
+
+Docker v23.0.5
+
+docker-compose v2.17.3
+
+
+## 各ファイルの紹介
+
+### ディレクトリ構成
 
 ```
 .
@@ -58,13 +66,17 @@ https://github.com/ariseanalytics/air_sample
 ├── main.go
 ```
 
-コンテナにgoコマンドを利用してairをインストールします。
+### Dockerfile
 
 ```Dockerfile
 FROM golang:1.20.4-bullseye
 
 RUN go install github.com/cosmtrek/air@latest
 ```
+
+コンテナにgoコマンドを利用してairをインストールします。
+
+### docker-compose.yaml
 
 ```yaml:docker-compose.yaml
 version: "3.8"
@@ -82,7 +94,9 @@ services:
     command: sh -c 'go mod tidy && air'
 ```
 
-.air.tomlはAirの設定ファイルであり `air init` で生成したファイルをそのまま利用します。
+コンテナを起動したらGoで用いるパッケージのインポートとAirの起動を行います。
+
+### .air.toml
 
 ```toml:.air.toml
 root = "."
@@ -131,10 +145,17 @@ tmp_dir = "tmp"
   keep_scroll = true
 ```
 
-エントリーポイントのmain.goは以下のようにします。
-Ginのドキュメントのクイックスタートに記載のサンプルコードをそのまま記述しました。
+.air.tomlはAirの設定ファイルであり `air init` で生成したファイルをそのまま利用します。
 
-以下のように記述すると8080番ポートでhttpリクエストを待ち受けるようになります。
+簡単に説明をすると
+
+- "_test" を含むファイルと"assets", "tmp", "vendor", "testdata" ディレクトリはビルドの対象外とする
+- tmp/ ディレクトリにmainという実行ファイルをビルドして実行する
+
+という設定にしています。
+
+
+### main.go
 
 ```go:main.go
 package main
@@ -152,16 +173,20 @@ func main() {
 }
 ```
 
+Ginのドキュメントのクイックスタートに記載のサンプルコードをそのまま記述しました。
+
+このように記述すると8080番ポートでhttpリクエストを待ち受けるようになります。
+
 # 動作チェック
 
 ## httpサーバーが起動するか
 
-コンテナを起動するために`docker compose up`を実行。
+コンテナを起動するために`docker compose up`を実行します。
 
 ```
 $ docker compose up
 [+] Running 1/0
- ✔ Container air_sample  Created                                     0.0s
+ ✔ Container air_sample  Created           0.0s
 Attaching to air_sample
 air_sample  |
 air_sample  |   __    _   ___
@@ -182,12 +207,14 @@ $ curl localhost:8080/ping
 {"message":"pong"}
 ```
 
-dockerのターミナル
+dockerのターミナルを確認すると以下のように出力されます。
 ```
 air_sample  | [GIN] 2023/05/10 - 04:35:23 | 200 |     367.667µs |      172.18.0.1 | GET      "/ping"
 ```
 
 ## ホットリロードが機能するか
+
+main.goを下記のように変更し上書き保存をしてみます。
 
 ```go:main.go
 package main
@@ -204,25 +231,35 @@ func main() {
 	r.Run()
 }
 ```
-に変更。入るを上書き保存をすると
 
-dockerのターミナル
+保存をした時にdockerのターミナルを見ると
 ```
 air_sample  | main.go has changed
-air_sample  | building...
-air_sample  | main.go has changed
-air_sample  | running...
+building...
+running...
+
+~中略~
+
+[GIN-debug] Listening and serving HTTP on :8000
 ```
 
-レスポンスの確認
+と表示され再ビルドとAPIの再起動が行われました。
+
+レスポンスの確認をしてみると
+
 ```
 $ curl localhost:8080/ping
 {"message":"pong updated"}
 ```
 
-このように保存をすると自動でビルドをし直してサーバーが起動するようになりました。
+このように変更が反映されるようになりました。
 
 # 最後に
 
 今回はGoの応用事例としてAPIサーバーの開発に使う便利なツールを紹介しました。
+
+我々の開発でも重宝しているツールなのでGoでAPIサーバーを構築する際にはぜひ使ってみてください。
+
+最後まで読んでくださりありがとうございました。
+
 今後も近年ホットな技術の記事もアップしていきますので見に来てください！
