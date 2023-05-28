@@ -27,24 +27,24 @@ EC2, ECS, Lambdaなどにソフトウェアをデプロイすることができ�
 料金は「AWS CodeDeploy を使用した Amazon EC2、AWS Lambda や Amazon ECS へのコードデプロイに追加料金は必要ありません。」とされているためEC2を使っていると無料で使用できる。
 
 
-# 構築
+# 目標
 
-本番ブランチにコミットがプッシュされたときにオートデプロイを実行する
+developブランチにコミットがプッシュされたときにオートデプロイを実行する
 
 ## イメージ
 
 （drawioのイメージ）
 
-1. GutHub Actionsで本番ブランチへのプッシュをトリガーにCodeDeployを起動
+1. GutHub ActionsでdevelopブランチへのプッシュをトリガーにCodeDeployをコール
 1. appspec.yamlに従いコマンドを実行
 
 ## Github Actions の設定
 
-リポジトリのSettings > Secrets > Actions でクレデンシャルを保存。
+リポジトリの `Settings > Secrets > Actions` でクレデンシャルを保存。
 
 ## workflowの設定
 
-```yaml
+```yaml:codedeploy.yaml
 name: CodeDeploy Caller
 
 on:
@@ -77,7 +77,7 @@ jobs:
 
 ## appspec.yamlの設定
 
-```yaml
+```yaml:appspec.yaml
 version: 0.0
 os: linux
 files:
@@ -102,13 +102,10 @@ hooks:
 # permissionの変更
 chown -R ec2-user:ec2-user /var/www/code_deploy_test
 chmod -R 777 /var/www/code_deploy_test/laravel/storage
-docker exec prd_sample_app_php php artisan migrate
 
 # アプリケーションのスタート
 cd /var/www/code_deploy_test/docker/production
 docker-compose up -d
-docker image prune -f
-docker volume prune -f
 ```
 
 ## CodeDeployの設定
@@ -141,14 +138,12 @@ resource "aws_iam_role_policy_attachment" "code_deploy_policy_attachments" {
   role       = aws_iam_role.sample_app_deploy_role.name
 }
 
-
 # ----------------------------------
 # CodeDeploy
 # ----------------------------------
 resource "aws_codedeploy_app" "sample_app" {
   name = "sample_app-app"
 }
-
 
 resource "aws_codedeploy_deployment_group" "sample_app_deploy_group" {
   app_name              = aws_codedeploy_app.sample_app.name
@@ -159,7 +154,7 @@ resource "aws_codedeploy_deployment_group" "sample_app_deploy_group" {
     ec2_tag_filter {
       key   = "Name"
       type  = "KEY_AND_VALUE"
-      value = "staging(on-demand)"
+      value = "production"
     }
   }
 
@@ -168,21 +163,15 @@ resource "aws_codedeploy_deployment_group" "sample_app_deploy_group" {
     events  = ["DEPLOYMENT_FAILURE"]
   }
 }
+```
 
-resource "aws_codestarnotifications_notification_rule" "rank-codedeploy" {
-  detail_type = "FULL"
-  event_type_ids = [
-    "codedeploy-application-deployment-failed",
-    "codedeploy-application-deployment-started",
-    "codedeploy-application-deployment-succeeded",
-  ]
+ec2_tag_set はEC2を識別するためのタグの条件で`Name = production`としているEC2に対してデプロイを行うようにしました。
 
-  name     = "rank-codedeploy"
-  resource = "arn:aws:codedeploy:ap-northeast-1:536168187560:application:sample_app-app"
+GitHubのリポジトリでActionsタブを確認して、以下の記述があれば成功
 
-  target {
-    address = "arn:aws:chatbot::536168187560:chat-configuration/slack-channel/codedeploy"
-    type    = "AWSChatbotSlack"
-  }
+```
+Run aws deploy create-deployment \
+{
+    "deploymentId": "d-XXXXXXXXX"
 }
 ```
