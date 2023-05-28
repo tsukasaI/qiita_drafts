@@ -47,31 +47,33 @@ DynamoDBはテーブルのデータをパーティションと呼ばれる領域
 
 # 操作
 
+aws cliをインストールしてコマンドで実行します。
+
 ## テーブル作成
 ```
 aws dynamodb create-table \
-    --table-name kddi-cms-dashboard \
+    --table-name SampleTable \
     --attribute-definitions \
-        AttributeName=CorporateCode,AttributeType=S \
-        AttributeName=TargetGenderAgeDate,AttributeType=S \
+        AttributeName=SamplePartitionKey,AttributeType=S \
+        AttributeName=SampleSortKey,AttributeType=S \
     --key-schema \
-        AttributeName=CorporateCode,KeyType=HASH \
-        AttributeName=TargetGenderAgeDate,KeyType=RANGE \
+        AttributeName=SamplePartitionKey,KeyType=HASH \
+        AttributeName=SampleSortKey,KeyType=RANGE \
     --provisioned-throughput \
         ReadCapacityUnits=5,WriteCapacityUnits=4000 \
-    --table-class STANDARD --endpoint-url http://172.17.0.1:8000
+    --table-class STANDARD
 ```
 
 ## データ投入
 ```
-aws dynamodb put-item --table-name 'kddi-cms-dashboard' --item '{"CorporateCode": { "S": "80000011" },"TargetGenderAgeDate": {"S": "step_avg#female#10歳未満#2022-12-01"}, "Value": {"N": "5000"}}' --endpoint-url http://172.17.0.1:8000
+aws dynamodb put-item --table-name 'SampleTable' --item '{"SamplePartitionKey": { "S": "00000000" },"SampleSortKey": {"S": "SampleSortkeyValue"}, "Value": {"N": "5000"}}'
 ```
 
 ## クエリ
 
 ```
-aws dynamodb query --table-name kddi-cms-dashboard \
-    --key-condition-expression 'CorporateCode = :code and begins_with (TargetGenderAgeDate, :sub)' \
-    --expression-attribute-values '{":code": { "S": "00000000" },":sub": {"S": "step"}}' \
-    --endpoint-url http://localhost:7790
+aws dynamodb query --table-name SampleTable \
+    --key-condition-expression 'SamplePartitionKey = :code and begins_with (SampleSortKey, :sub)' \
+    --expression-attribute-values '{":code": { "S": "00000000" },":sub": {"S": "Sample"}}' \
+
 ```
