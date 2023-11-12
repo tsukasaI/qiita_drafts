@@ -3,8 +3,6 @@
 ## future
 
 - algorithmの勉強でやったソートをGoでまとめる
-- REST client google -> postman -> vscode rest client
-- JS console.log '\o'
 - TS Drizzle
 - orverload
 
