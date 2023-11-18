@@ -151,3 +151,5 @@ await connection.end();
 ```
 
 このsrc/migrate.tsをtscで実行するとマイグレーションが実行されます。
+
+今までPrisma一択で新しいORMを探している方はぜひ！
