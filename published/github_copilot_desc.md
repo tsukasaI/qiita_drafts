@@ -1,10 +1,8 @@
-# GitHub CopilotにGitHub Copilotについて語ってみてもらった
+# GitHub Copilotにたくさん質問してみた
 
 この記事はGitHub Copilot ChatにGitHub Copilotに対する質問をしたことをまとめています。
 
 学習ツールとしても利用できるGitHub Copilot Chatがどのような返答をしたかをお楽しみください。
-
-
 
 ## Q. GitHub Copilotが考えるアシストしやすいプログラミング言語を教えてください。
 
@@ -89,3 +87,7 @@ GitHub Copilotがある場合：
 GitHub Copilotはコーディングの過程を助け、時間を節約します。新しい技術や言語を学ぶ際には、GitHub Copilotが適切なコードスニペットを提供してくれます。また、バグを見つける際には、GitHub Copilotが一般的なバグを修正する提案を行います。さらに、テストケースの作成もGitHub Copilotが助けてくれます。
 
 しかし、GitHub Copilotはあくまで補助ツールであり、エンジニア自身の判断とスキルが最も重要です。GitHub Copilotの提案は必ず確認し、適切な場合のみ使用する必要があります。また、GitHub Copilotに頼りすぎると、エンジニアのコーディングスキルが低下する可能性もあります。
+
+# 最後に
+
+頼りがいのあるツールである一方であくまで補助ツールであることを忘れずに便利に使っていきましょう。
