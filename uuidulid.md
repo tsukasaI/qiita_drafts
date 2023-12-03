@@ -78,15 +78,16 @@ UUIDのデメリットは完全には取り除けはしませんが、いくら�
 ```typescript
 import { ulid } from "ulid";
 
-let i = 1;
-
 const printer = () => {
-  if (i > 10) clearInterval(id);
-  console.log(new Date().getTime(), ":", ulid());
-  i++;
+  let i = 1;
+  const id = setInterval(() => {
+    if (i > 10) clearInterval(id);
+    console.log(new Date().getTime(), ":", ulid());
+    i++;
+  }, 1);
 };
 
-var id = setInterval(printer, 1);
+printer();
 ```
 
 解説するとprinter関数内では現在時刻のUNITTIMEとulidの値を出力します。
