@@ -12,7 +12,7 @@ JavaScriptでは`toString`, `toDateString`, `toLocaleString`, `toISOString` な�
 
 一方で任意のフォーマットにする場合は年、月、日の値を取得することができます。
 
-例えば`YYYY/MM/DD`にするならこんな感じにかけます。
+例えば`YYYY/MM/DD`にするならこんな感じに書きます。
 
 ```javascript
 const now = new Date();
@@ -37,8 +37,13 @@ console.log(`${year}/${month}/${day}`);
 
 もちろんGoにも日付があります。
 
-timeパッケージ https://pkg.go.dev/time
+timeパッケージを使用します
 
+リンク: https://pkg.go.dev/time
+
+早速現在の時刻を`YYYY/MM/DD`で表示する処理を書いてみます。
+
+まずはfmt.PrintfでJavaScriptのgetFullYearなどのメソッドを使った場合に似たコードを書いてみます。
 
 ```go
 package main
@@ -54,6 +59,9 @@ func main() {
 }
 ```
 
+こんな感じで`%d`で数値を表示、`%02d`で2桁の0パディングした数値を表示できます。
+
+さて、今回紹介したいtime.Timeのformatメソッドで書いてみるとどうでしょうか。
 
 ```go
 package main
@@ -68,3 +76,17 @@ func main() {
     fmt.Println(now.Format("2006/01/02"))
 }
 ```
+
+なんと！
+
+形式に`2006/01/02`というフォーマットでは見慣れない形式が出てきました。
+
+これは何でしょうか？
+
+調べるとすぐにヒットしますが、アメリカ式の日時の自然な順番を示します。
+
+`1月2日午後3時4分5秒2006年”`
+
+他のプログラミング言語ではなかなか見ない形で指定しています。
+
+みなさんもGoで日時のフォーマットを見てびっくりしてみてください！
