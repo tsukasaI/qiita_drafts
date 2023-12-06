@@ -65,12 +65,12 @@ func (h *hashTable) get(key string) (string, bool) {
 func main() {
 	h := newHashTable()
 
-	h.add("car", "Tesla")
-	h.add("car", "Tesla")
-	h.add("pc", "Mac")
+	h.add("asdf", "Go")
+	h.add("asdf", "Go")
+	h.add("git", "reset")
 	h.add("sns", "YouTube")
 	h.print()
-	v, ok := h.get("pc")
+	v, ok := h.get("git")
 	if ok {
 		fmt.Println(v)
 	}
