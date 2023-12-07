@@ -1,4 +1,4 @@
-# N+1問題
+# N+1問題のヤバさととその解決策
 
 この言葉を聞いてダメ！絶対！と感じる人、どんな問題なんだろ？と感じる人さまざまいると思います。
 
@@ -35,15 +35,15 @@ X(旧Twitter)を簡単にしたサービスに以下のようなusersとtweeets�
 | 6 | 1 | Fine |
 | ... | ... | ... |
 
-このDBから各tweetとtweetしたユーザーをクライアントに取得したい場合はどうするでしょうか？
+このDBから各tweetとtweetしたユーザーをクライアントに返却する場合はどうするでしょうか？
 
-### N+!問題を引き起こすパターン
+### N+1問題を引き起こすパターン
 
 tweetsテーブルからレコードを全て(Nレコードとする)取得してからループ処理で各user_idでusersテーブルから1件ずつレコードを取得
 
 という処理考えたとします。確かにtweetsテーブルのuser_id情報からusersの情報を取得することはできます。
 
-がクエリの発行数に着目してみるとどうでしょうか？
+しかしクエリの発行数に着目してみるとどうでしょうか？
 
 クエリは
 
@@ -82,16 +82,18 @@ Eager Loadを使う場合、処理とクエリ発行は以下の流れになり�
 1. 上で生成したuser_idリストにあるusersテーブルのレコードを取得: 1回
 1. tweetsのuser_idとusersのidのリレーションからまとめた構造を作る: 0回（ORM内部の処理）
 
-GoのORMパッケージのGORMの両方でこの機能を使えます。
+Eager LoadはGoのORMパッケージのGORMでこの機能を使えます。
 
 例を書いてみます。
 
 ```go
+// usersテーブルの構造体
 type User struct {
     ID    uint `gorm:"primaryKey"`
     Name  string
 }
 
+// tweetsテーブルの構造体
 type Tweet struct {
     ID     uint `gorm:"primaryKey"`
     UserID uint
@@ -99,6 +101,7 @@ type Tweet struct {
     Tweet  string
 }
 
+// tweetsからusersをEager Load
 func getTweetsWithUser() []Tweet {
     tweets := make([]Tweet, 0)
     db.Preload("User").Find(&tweets)
@@ -106,6 +109,6 @@ func getTweetsWithUser() []Tweet {
 }
 ```
 
-このようにするとEager Loadが実行されTweet構造体にUser情報が格納され、かつクエリは2回のみになります。
+このように`getTweetsWithUser()`をコールするとEager Loadが実行されTweet構造体にUser情報が格納され、かつクエリは2回のみになります。
 
 皆さんは性能問題を引き起こすことのないようにこの対応を覚えておきましょう。
