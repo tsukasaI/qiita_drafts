@@ -2,8 +2,39 @@ Serverless Framework 導入 ローカル環境でGoをLambdaで実行する例
 
 # Serverlessめっちゃ便利
 
-ローカルでLambdaの実行環境を構築する場合に使う
+ローカルでLambdaの実行環境を構築する場合に使うツールにServerless Frameworkがあります。
 
+いつもローカル環境ではDocker、サーバーはECSなりEC2などを使っていたところからマイクロサービスを構築できるように勉強したので
+
+それを共有します。
+
+## 今回のお題
+
+- Goを使ってAPIを構築する
+- パッケージはGinを使う
+- APIをLambdaを使ってコールできるようにする
+
+これらを満たすやり方を紹介していきます。
+
+## 環境
+
+- M2 Macbook Air
+- Go v1.21.4 darwin/arm64
+- npm 10.2.4
+- Docker 24.0.6, build ed223bc
+
+お急ぎの方は[こちら](https://github.com/tsukasaI/serverless_with_go)から
+
+## コードたち
+
+
+### Go
+
+まずはGoでAPIを構築していきましょう。
+
+GinとLambdaを使うのでそれぞれインポートします。
+
+今回はついでにenvの読み取り方も示すのでenvパッケージも使います。
 
 ```go:main.go
 package main
@@ -59,6 +90,23 @@ func main() {
 
 ```
 
+エントリーポイントであるmain関数にはlambda.Startをコールして、Handler関数を呼び出します。
+
+mainよりも先にinit関数が呼ばれて各種設定を行います。
+
+envの設定についてはconfig構造体を定義して、env.Parseをして値を入れます。
+
+SAMPLE_ENVについてはserverless.yamlで定義するので後ほど。
+
+`r := gin.Default()`以降はでルーティングを行います。
+
+シンプルにするためにエンドポイントのレスポンスは固定の文字列にしました。
+
+
+設定が終わったらginとLambdaをつなぐために`ginLambda = ginadapter.New(r)`としてHandlerで利用します。
+
+### serverless.yaml
+
 ```yaml:serverless.yaml
 service: aws-lambda-go-api-proxy-gin
 
@@ -103,23 +151,43 @@ functions:
       - http:
           path: hello
           method: get
-
 ```
 
+ポイントは
+
+- ENVの設定
+ENVはprovider > environmentで定義します。
+
+今回は`SAMPLE_ENV: SAMPLE_ENV`としてセットしました。
+
+ここはyamlファイルに載せていい内容にする、もしくはParameter Storeなどのサービスを使って設定するようにしましょう。
+
+
+- Runtimeの設定
+provider > runtimeで設定します。
+
+ここで注意ですが、go1.xのランタイムはサポートが終了するので`provided.al2`を使いましょう。
+
+こちらはビルドしたバイナリが必要になるので別途ビルドできるようにする必要があります。
+
+- serverless-offlineのオプション
+provided.al2を利用する際にはdockerを使用します。
+
+custom > serverless-offline > useDockerをtrueにしておきましょう
+
+## ローカル環境で実行
+
+ビルドしてserverless offlineコマンドを実行してみよう。
+
+（参考のGitHubにはnpmでビルドとserverless offlineコマンドは実行できるようにしてあります。）
+
 ```
-% npm run dev
+% serverless offline
 
 > go_lambda_serverless@1.0.0 dev
 > serverless offline
 
-(node:26841) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
-(Use `node --trace-deprecation ...` to show where the warning was created)
-
-Starting Offline at stage api (ap-northeast-1)
-
-Offline [http for lambda] listening on http://localhost:3002
-Function names exposed for local invocation by aws-sdk:
-           * api: aws-lambda-go-api-proxy-gin-api-api
+~中略~
 
    ┌───────────────────────────────────────────────────────────────────────┐
    │                                                                       │
@@ -132,7 +200,13 @@ Function names exposed for local invocation by aws-sdk:
 
 Server ready: http://localhost:3000 🚀
 
+```
 
+これで起動できました。
+
+`curl http://localhost:3000/api/ping`でリクエストしてみると
+
+```
 GET /api/ping (λ: api)
 ✖ Lambda API listening on port 9001...
 
@@ -153,42 +227,8 @@ GET /api/ping (λ: api)
 ✖ END RequestId: 01490924-e0e4-1335-a097-7dd6f3cfdc51
 
 ✖ REPORT RequestId: 01490924-e0e4-1335-a097-7dd6f3cfdc51        Init Duration: 94.07 ms     Duration: 12.88 ms      Billed Duration: 13 ms  Memory Size: 1024 MB    Max Memory Used: 61 MB
-
-
-
-GET /api/hello (λ: api)
-✖ START RequestId: a077c5a7-0586-1eb3-42b0-edcd500bcf99 Version: $LATEST
-
-✖ [GIN] 2023/12/09 - 12:09:55 | 404 |         667ns |                 | GET      "/hello"
-
-✖ END RequestId: a077c5a7-0586-1eb3-42b0-edcd500bcf99
-
-✖ REPORT RequestId: a077c5a7-0586-1eb3-42b0-edcd500bcf99        Duration: 8.96 ms  Billed Duration: 9 ms    Memory Size: 1024 MB    Max Memory Used: 63 MB
-
-✖ Handler/layer file changed, restarting bootstrap...
-  Handler/layer file changed, restarting bootstrap...
-  Handler/layer file changed, restarting bootstrap...
-  Handler/layer file changed, restarting bootstrap...
-
-
-
-GET /api/hello (λ: api)
-✖ 2023/12/09 12:10:32 Gin cold start
-
-✖ [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
-
-  [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
-   - using env: export GIN_MODE=release
-   - using code:        gin.SetMode(gin.ReleaseMode)
-
-  [GIN-debug] GET    /ping                     --> main.init.0.func1 (3 handlers)
-  [GIN-debug] GET    /hello                    --> main.init.0.func2 (3 handlers)
-
-✖ START RequestId: 98f2c140-0ae9-1cfc-bc0c-9878c62d773e Version: $LATEST
-
-✖ [GIN] 2023/12/09 - 12:10:32 | 200 |      19.416µs |                 | GET      "/hello"
-
-✖ END RequestId: 98f2c140-0ae9-1cfc-bc0c-9878c62d773e
-
-✖ REPORT RequestId: 98f2c140-0ae9-1cfc-bc0c-9878c62d773e        Duration: 5.38 ms  Billed Duration: 6 ms    Memory Size: 1024 MB    Max Memory Used: 63 MB
 ```
+
+のように表示され、レスポンスは`{"message":"pong"}`となっています。
+
+みんなもServerlessでGoのAPIを動かしてみてください。
