@@ -12,11 +12,28 @@
 
 mapはGoには標準搭載されている。mapはO(1)で値にアクセスできる優れものである。
 
-例としてスライスの中に重複があるかを判定する関数を考えてみよう。
+例として要素数N個のスライス中に重複する要素があるかを判定する関数を考えてみよう。
 
-何も考えずに
+最初に筆者が考えたのは
 
-```
+- 一番目の要素を二番目以降の要素と比較して重複があるか判定
+- 二番目の要素を三番目以降の要素と比較して重複があるか判定
+...
+- N-1番目の要素をN番目以降の要素と比較して重複があるか判定
+
+この処理だと時間計算量は**O(N^2)**となり効率は良くはありません。
+
+これをmapを使う方法で考えてみます。
+
+- mapを定義
+- スライスをループして、mapのキーにindexの要素があるか重複判定。重複がなければmapのキーにindexの要素を追加
+
+これをすることで計算量は**O(N)**となる。空間計算量は**O(N)**。
+
+コードを見てみよう。
+
+
+```go
 func containsDuplicate(nums []int) bool {
     hm := make(map[int]struct{})
 
@@ -30,19 +47,25 @@ func containsDuplicate(nums []int) bool {
 }
 ```
 
-two pointer
-```
+mapのvalueにはstruct{}{}を入れているが、もちろんtrueを入れてもOK。
+
+
+## two pointers
+
+two pointersはleftとrightの2つのポインタを使ったテクニックになる。
+
+パターンは色々あるが回分の判定を例に見てみよう。
+
+回分はある文字列が左から順に読んでも右から順に読んでも一致する状態であり、英語では`palindrome`という。
+
+条件として引数の文字列は小文字の英語のみとします。
+
+```go
 func isPalindrome(s string) bool {
     l, r := 0, len(s) - 1
 
     for l < r {
-        for l < r && !isAlphaNum(s[l]) {
-            l++
-        }
-        for l < r && !isAlphaNum(s[r]) {
-            r--
-        }
-        if getLowerLetterByte(s[l]) != getLowerLetterByte(s[r]) {
+        if s[l] != s[r] {
             return false
         }
         l++
@@ -50,73 +73,56 @@ func isPalindrome(s string) bool {
     }
     return true
 }
-
-func isAlphaNum(b byte) bool {
-    return ('a' <= b && b <= 'z') || ('A' <= b && b <= 'Z') || ('0' <= b && b <= '9')
-}
-
-func getLowerLetterByte(b byte) byte {
-    if b >= 'A' && b <= 'Z' {
-        return b + byte('a' - 'A')
-    }
-    return b
-}
 ```
 
-sliding window
+時間計算量は**O(N)**で空間計算量は**O(1)**
 
-```
-package main
+## sliding window
 
-import (
-	"fmt"
-)
+two pointersに似ているがsliding windowはスライス内の特定の範囲に着目し、範囲をずらして比較するを繰り返すアルゴリズム。
+
+例えばスライスの中nこの部分スライスの和の最大を求めるコードを考える。
+
+```go
 
 func maxSubarraySum(array []int, n int) int {
-//Write a check for the edge case if the array's length is smaller than the subarray's length. If it is then we return 0.
+
 	if n > len(array) {
 		return 0
 	}
-	maxSum := 0 //Assign a variable that will hold the highest sum
-	tempSum := 0 //Assign a variable that will hold the sum of the current subarray we're looking at.
 
-	//Create a loop that will Loop through 1 time to get the sum of the first set of numbers
+	maxSum := 0
+	tempSum := 0
+
 	for i := 0; i < n; i++ {
-  //Set maxSum to equal the sum of our first loop
+
 		maxSum += array[i]
 	}
-	//Now that we have a max sum, assign temp sum to max sum
+
 	tempSum = maxSum
 
-	//Loop through the length of the whole array starting from the index of the next number after the first set
+
 	for i := n; i < len(array); i++ {
-		//assigning new tempsum, we get the current tempSum, move down the number of indexes == to n, subtract that number, then add the number of the current loops index
-    fmt.Println(tempSum, array[i-n], array[i]) //Visual representation when ran to see the values so you can see whats going on.
 		tempSum = tempSum - array[i-n] + array[i]
-		//see which is larger the current maxSum or the tempSum we're holding, if tempSum is larger maxSum is now the value of TempSum
-		maxSum = Max(maxSum, tempSum)
+		maxSum = max(maxSum, tempSum)
 	}
 	return maxSum
 }
 
-//helper function to get the higher of two integers
-func Max(x int, y int) int {
+func max(x int, y int) int {
 	if x < y {
 		return y
 	}
 	return x
 }
-
-func main() {
-	fmt.Println(maxSubarraySum([]int{-1, -1, -2, 4, 2, 3, 5, 1}, 4))
-	fmt.Println(maxSubarraySum([]int{}, 4))
-	fmt.Println(maxSubarraySum([]int{100, 200, 300, 400}, 2))
-}
 ```
 
-stack
+時間計算量は**O(N)**で空間計算量は**O(1)**
 
-```
+
+## stack
+
+```go
 func isValid(s string) bool {
 	pairs := map[byte]byte{
 		'}': '{',
@@ -150,7 +156,7 @@ func isValid(s string) bool {
 
 binary search
 
-```
+```go
 func search(nums []int, target int) int {
     left, right := 0, len(nums) - 1
 
@@ -205,12 +211,12 @@ func reverseList(head *ListNode) *ListNode {
 
 heap
 
-```
+```go
 ```
 
 backtrack
 
-```
+```go
 func subsets(nums []int) [][]int {
 	ans := make([][]int, 0)
 	curr := make([]int, 0)
@@ -233,7 +239,7 @@ func subsets(nums []int) [][]int {
 
 DP
 
-```
+```go
 func climbStairs(n int) int {
 	one, two := 1, 1
 
@@ -273,7 +279,7 @@ func max(a, b int) int {
 
 interval
 
-```
+```go
 import "sort"
 
 func merge(intervals [][]int) [][]int {
