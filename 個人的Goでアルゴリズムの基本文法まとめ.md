@@ -289,53 +289,80 @@ numsの長さをNとすると
 
 - 空間計算量：left、right、midの3つの変数のみ使うため**O(1)**
 
-## linked list
-```
-/**
- * Definition for singly-linked list.
- * type ListNode struct {
- *     Val int
- *     Next *ListNode
- * }
- */
-func reverseList(head *ListNode) *ListNode {
+## Linked List
+
+日本語では連結リストで、各データが一つ前もしくは一つ後ろへの参照情報を持つデータ構造。
+
+ここでは一つ後ろへの参照情報を持つ連結リストを反転させる処理を書く。
+
+再帰を利用するパターンとloopを利用するパターン両方書いてみる。
+
+```go
+type linkedListNode struct {
+	Val int
+	Next *linkedListNode
+}
+
+// Recursive version
+func reverseListRecursive(head *linkedListNode) *linkedListNode {
 	if head == nil || head.Next == nil {
 		return head
 	}
 
-	reversedListHead := reverseList(head.Next)
+	// headの次を変数として再帰的に処理した結果を変数として保持
+	reversedListHead := reverseListRecursive(head.Next)
+	// 反転する処理
 	head.Next.Next = head
 	head.Next = nil
 	return reversedListHead
 }
 
 // Iterative version
-// func reverseList(head *ListNode) *ListNode {
-//     var prev *ListNode
-//     curr := head
-//
-//     for curr != nil {
-//         tmp := curr.Next
-//         curr.Next = prev
-//         prev = curr
-//         curr = tmp
-//     }
-//
-//     return prev
-// }
+func reverseListIterative(head *linkedListNode) *linkedListNode {
+	// 現在のnodeと一つ前のnodeを変数として保持
+    var prev *linkedListNode
+    curr := head
+
+    for curr != nil {
+		// 元々の一つ後の要素を保持
+        tmp := curr.Next
+
+		// 反転する処理
+        curr.Next = prev
+        prev = curr
+        curr = tmp
+    }
+
+    return prev
+}
 ```
 
-## heap
+リストの個数をNとして計算量について
 
-```go
-```
+- 再帰
+  - 時間計算量は**O(N)**
+  - 空間計算量は再帰を使用して全ノードが再帰スタックにプッシュされるため**O(N)**
+- イテレーション
+  - 時間計算量は**O(N)**
+  - 空間計算量はprev、curr、tmpの3つの変数のみ利用するため**O(1)**
+
 
 ## backtrack
+
+ある問題を解くときに仮に一つの部分解を設定し、残りの問題を解く。
+解が見つかった場合は正式に解のひとつとして採用し、解がない場合は棄却する。
+
+文字で書くと難しいので例題とコードで見てみよう。
+
+ある配列の部分要素を全て求めたいとする。
+
+例えば`[1, 2, 3]`は`[], [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]`と8通りとなるが関数を書いて見てみる。
 
 ```go
 func subsets(nums []int) [][]int {
 	ans := make([][]int, 0)
 	curr := make([]int, 0)
+
 	var backtrack func(idx int)
 	backtrack = func(idx int) {
 		ans = append(ans, append([]int{}, curr...))
@@ -343,8 +370,10 @@ func subsets(nums []int) [][]int {
 			return
 		}
 		for i := idx; i < len(nums); i++ {
+			// nums[i]が含まれるパターン
 			curr = append(curr, nums[i])
 			backtrack(i + 1)
+			// nums[i]が含まれないパターン
 			curr = curr[:len(curr)-1]
 		}
 	}
@@ -353,6 +382,19 @@ func subsets(nums []int) [][]int {
 }
 ```
 
+配列の要素数をNとすると計算量について
+
+- 時間計算量は部分集合の数は2^Nのため**O(2^N)**
+
+- 空間計算量は部分集合の数は2^Nのため**O(2^N)**
+
+## まとめ
+
+ここまで学んだアルゴリズムとデータ構造について例題とコードで説明してきた。
+
+この他にもDP、貪欲法、Heapなど様々学習すべきものがあるので、引き続き理解して楽しいエンジニアリングライフを！
+
+<!--
 ## DP
 
 ```go
@@ -425,4 +467,14 @@ func merge(intervals [][]int) [][]int {
 
 	return res
 }
-```
+``` -->
+
+
+<!-- ## Heap
+
+Heapは優先度付きキュー(Priority Queue)の実装の一つ。
+
+ある集合に要素が増えるごとに
+
+```go
+``` -->
