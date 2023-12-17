@@ -1,4 +1,4 @@
-個人的Goでアルゴリズムの基本文法まとめ
+個人的Goでアルゴリズムとデータ構造の基本文法まとめ
 
 # アルゴリズムめっちゃ大事
 
@@ -79,30 +79,29 @@ func isPalindrome(s string) bool {
 
 ## sliding window
 
-two pointersに似ているがsliding windowはスライス内の特定の範囲に着目し、範囲をずらして比較するを繰り返すアルゴリズム。
+two pointersに似ているがsliding windowはスライス内の特定の範囲に着目し、範囲をずらして比較するを繰り返すアルゴリズムです。
 
-例えばスライスの中nこの部分スライスの和の最大を求めるコードを考える。
+例えばスライスの中n個の部分スライスの和の最大を求めるコードを考える。
 
 ```go
 
 func maxSubarraySum(array []int, n int) int {
-
+	// nがスライスの長さよりも大きければ0で終了
 	if n > len(array) {
 		return 0
 	}
 
-	maxSum := 0
-	tempSum := 0
+	maxSum := 0 // 求めたい最大の和
+	tempSum := 0 // n要素のスライスの要素の和
 
+	// 0からn-1番目までの要素の和を求める
 	for i := 0; i < n; i++ {
-
 		maxSum += array[i]
 	}
-
 	tempSum = maxSum
 
-
 	for i := n; i < len(array); i++ {
+		// i-n番目の要素を引いてi番目を足せば次の部分スライスの我が求められる
 		tempSum = tempSum - array[i-n] + array[i]
 		maxSum = max(maxSum, tempSum)
 	}
@@ -117,10 +116,13 @@ func max(x int, y int) int {
 }
 ```
 
-時間計算量は**O(N)**で空間計算量は**O(1)**
-
+時間計算量は**O(N)**で空間計算量は**O(1)**となる。
 
 ## stack
+
+Stackは最後に入れた要素が最初に取り出されるデータ構造。
+
+LIFO(Last In First Out)とい
 
 ```go
 func isValid(s string) bool {
@@ -154,7 +156,9 @@ func isValid(s string) bool {
 }
 ```
 
-binary search
+## queue
+
+## binary search
 
 ```go
 func search(nums []int, target int) int {
@@ -171,9 +175,10 @@ func search(nums []int, target int) int {
         }
     }
     return -1
-}```
+}
+```
 
-linked list
+## linked list
 ```
 /**
  * Definition for singly-linked list.
@@ -209,12 +214,12 @@ func reverseList(head *ListNode) *ListNode {
 // }
 ```
 
-heap
+## heap
 
 ```go
 ```
 
-backtrack
+## backtrack
 
 ```go
 func subsets(nums []int) [][]int {
@@ -237,7 +242,7 @@ func subsets(nums []int) [][]int {
 }
 ```
 
-DP
+## DP
 
 ```go
 func climbStairs(n int) int {
@@ -252,7 +257,8 @@ func climbStairs(n int) int {
 }
 ```
 
-greedy
+## greedy
+
 ```
 func maxSubArray(nums []int) int {
     res := nums[0]
@@ -277,7 +283,8 @@ func max(a, b int) int {
 }
 ```
 
-interval
+## interval
+
 
 ```go
 import "sort"
