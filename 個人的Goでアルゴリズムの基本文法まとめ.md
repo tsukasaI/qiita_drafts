@@ -122,61 +122,172 @@ func max(x int, y int) int {
 
 Stackは最後に入れた要素が最初に取り出されるデータ構造。
 
-LIFO(Last In First Out)とい
+LIFO(Last In First Out)ともいわれる。
+
+例えばコードを書いているときに括弧の個数が間違っていないかを判定するときに使える。
+
+与えられた文字列のうち`{}`, `[]`, `()`の対応が正しいかを判定するコードを考えてみます。
+
+文字の種類は`{}[]()`のいずれかのみとします
 
 ```go
 func isValid(s string) bool {
+	// それぞれの括弧閉じるの対応する括弧開けるをmapで定義しておく
 	pairs := map[byte]byte{
 		'}': '{',
 		']': '[',
 		')': '(',
 	}
 
+	// stackを定義。今回はスライスで行う。
 	stack := make([]byte, 0)
 
 	for _, char := range []byte(s) {
+		// 文字が閉じ括弧でない場合、スタックに追加する
 		pair, ok := pairs[char]
 		if !ok {
 			stack = append(stack, char)
 			continue
 		}
 
+		// スタックが空である場合は無効な括弧の組み合わせのためfalseを返す
 		if len(stack) == 0 {
 			return false
 		}
 
+		// スタックの最後の要素が対応する開き括弧でない場合は無効な括弧の組み合わせのためfalseを返す
 		if stack[len(stack) - 1] != pair {
 			return false
 		}
 
+		// スタックの最後の要素が対応する開き括弧である場合、その要素をスタックから削除
 		stack = stack[:len(stack) - 1]
 	}
 
+	// スタックが空であればすべての括弧が正しくペアになっているためtrue
+	// スタックが空でない場合、一部の開き括弧に対応する閉じ括弧がないためfalseを返す
 	return len(stack) == 0
 }
 ```
 
-## queue
+このようにすると`()[]{}`はtrue、`([)]`はfalseが帰るようになります。
 
-## binary search
+sの文字列の長さをNとすると、時間計算量は**O(N)**、空間計算量は**O(N)**となる
+
+## Queue
+
+Queueは最初に入れられた要素が最初に取り出されるデータ構造。
+
+FIFO(First In First Out)と呼ばれることもあり、Stackとよく対比される。
+
+使い所はtreeのBFS(Breadth First Search)で処理を行いたいとき。
+
+以下の二分木を考える。
+
+```
+    1
+   / \
+  2   3
+ / \ / \
+4  5 6  7
+```
+
+各要素をnodeと称するが、nodeは左右に別のnodeへのアクセスができるとする。
+
+例えば1の要素はleftは2、rightは3といったデータ構造になる。
+
+これを1, 2, 3, ..., 7と順番に処理をしたいときのコードは以下のようになる。
+
+```go
+type node struct {
+	val int
+	left *node
+	right *node
+}
+
+func bfs(root *node) []int {
+	if root == nil {
+		return []int{}
+	}
+
+	// nodeのポインタのqueueを作成
+	queue := []*node{root}
+	result := make([]int, 0)
+
+	for len(queue) > 0 {
+		// dequeue
+		// queueの先頭要素を取得
+		current := queue[0]
+		// queueの先頭要素を削除
+		queue = queue[1:]
+		result = append(result, current.val)
+
+		// enqueue
+		if current.left != nil {
+			queue = append(queue, current.left)
+		}
+		if current.right != nil {
+			queue = append(queue, current.right)
+		}
+	}
+
+	return result
+}
+
+func main() {
+	root := &node{val: 1}
+	root.left = &node{val: 2}
+	root.right = &node{val: 3}
+	root.left.left = &node{val: 4}
+	root.left.right = &node{val: 5}
+	root.right.left = &node{val: 6}
+	root.right.right = &node{val: 7}
+
+	fmt.Println(bfs(root))
+}
+```
+
+先頭の要素を取得して削除する行為を`dequeue`, 末尾に要素を挿入する行為を`enqueue`と言う。
+
+Nをnode数として
+
+- 時間計算量は二分木の各ノードを一度だけ訪問するのみのため時間計算量は**O(N)**
+- 空間計算量はキューとしてスライスを使用し、最悪の場合（すべてのノードが同じレベルにある場合）、スライスの長さはノード数と同じになるため空間計算量は**O(N)**
+
+
+## Binary Search
+
+Binary Searchはソート済みの配列に対してターゲットとなる要素を取り出すアルゴリズム。
+
+intのスライスの中にtargetがあるかを判定し、存在すればtargetを、存在しなければ-1を返す関数を考える。
 
 ```go
 func search(nums []int, target int) int {
     left, right := 0, len(nums) - 1
 
     for left <= right {
+		// 中央をmidとして取得
         mid := (left + right) / 2
         if nums[mid] > target {
+			// ターゲットがmidよりも小さい場合は左側にスコープを絞る
             right = mid - 1
         } else if nums[mid] < target {
+			// ターゲットがmidよりも大きい場合は右側にスコープを絞る
             left = mid + 1
         } else {
+			// targetと同じならmidを返す
             return mid
         }
     }
     return -1
 }
 ```
+
+numsの長さをNとすると
+
+- 時間計算量：二分探索は各ステップで探索範囲を半分に狭めるため**O(log N)**
+
+- 空間計算量：left、right、midの3つの変数のみ使うため**O(1)**
 
 ## linked list
 ```
