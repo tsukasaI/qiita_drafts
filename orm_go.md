@@ -206,10 +206,35 @@ Eager Loadingを使用すると、一度のクエリでUserとそれに関連す
 
 Gormを使ったEager Loadingの例を示します。
 
+```go
+type User struct {
+    gorm.Model
+    Name   string
+    Orders []Order
+}
+
+type Order struct {
+    gorm.Model
+    UserID uint
+    Price  float64
+}
+
+var user User
+db.Preload("Orders").First(&user, "name = ?", "John")
+for _, order := range user.Orders {
+    fmt.Println(order)
+}
+
+```
+
+このコードでは、Preloadメソッドを使用してOrders関連をEager Loadingします。これにより、名前が"John"のUserとそのすべてのOrderを一度のクエリで取得します。
+
+このように、GormのPreloadメソッドを使用すると、関連するエンティティを効率的に取得することができます。
+
 # まとめ
 
 本記事ではORMの概要とGoのORMであるGormを使った基本操作を解説しました。
 
 バックエンドアプリケーションを構築する際にDBの操作の一つとして知っておきたい技術だと考えています。
 
-ぜひ参考にしてみんさんのプロジェクトに役立ててください！
+ぜひ参考にしてみなさんのプロジェクトに役立ててください！
