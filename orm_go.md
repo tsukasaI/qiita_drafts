@@ -1,8 +1,8 @@
 はじめに
 
-ORM（Object-Relational Mapping）の概要とその利点を説明します。
 ## ORMとは
 
+ORM（Object-Relational Mapping）の概要とその利点を説明します。
 ORMの詳細な説明と、なぜそれが有用であるかを説明します。
 SQLとの直接的な対話とORMを使用するときの違いを説明します。
 
@@ -20,6 +20,8 @@ ORMの主な利点は以下の通りです：
 
 これらの利点により、ORMはWebアプリケーションの開発において広く使用されています。
 
+バックエンドエンジニアならぜひ覚えておきたい技術と思いここからはARISEのプロジェクトで使われているGo言語（以下Go）で説明をしていきます。
+
 ## GoとGorm
 
 Go言語で利用可能なORMライブラリの一つであるGormの紹介をします。
@@ -28,9 +30,157 @@ Gormのインストール方法を説明します。
 
 ## Gormを使ったデータベース操作
 
+セッションの貼り方
+
+```go
+package main
+
+import (
+    "fmt"
+    "gorm.io/driver/mysql"
+	"gorm.io/gorm"
+)
+
+func main() {
+    dsn := "user:password@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
+    db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+
+    if err != nil {
+        fmt.Println("Failed to connect to database")
+        panic(err)
+    }
+
+    fmt.Println("Database connection successfully opened")
+}
+```
+
+構造体の定義
+
+```go
+
+type User struct {
+  ID           uint           // 主キーの標準フィールド
+  Name         string         // 通常の文字列フィールド
+  Email        *string        // 文字列へのポインタ、nullを許可
+  Age          uint8          // 符号なし8ビット整数
+  Birthday     *time.Time     // time.Timeへのポインタ。nullを許可
+  MemberNumber sql.NullString // sql.NullStringを使用して、null可能な文字列をハンドリング
+  ActivatedAt  sql.NullTime   // sql.NullTimeを使用したnull可能な時間フィールド
+  CreatedAt    time.Time      // GORMによって自動的に管理される作成時間
+  UpdatedAt    time.Time      // GORMによって自動的に管理される更新時間
+}
+
+```
+
 Gormを使った基本的なデータベース操作（CRUD操作）の例を示します。
+
+
 Select操作：Gormを使ってデータを取得する方法を説明します。
+```go
+
+var user User
+result := db.First(&user, "name = ?", "John")
+if result.Error != nil {
+    // エラーハンドリング
+    fmt.Println(result.Error)
+    return
+}
+fmt.Println(user)
+
+var users []User
+result := db.Find(&users, "age >= ?", 18)
+if result.Error != nil {
+    // エラーハンドリング
+    fmt.Println(result.Error)
+    return
+}
+for _, user := range users {
+    fmt.Println(user)
+}
+
+```
+
 Insert操作：Gormを使って新しいレコードを挿入する方法を説明します。
+
+```go
+user := User{Name: "John", Age: 25}
+result := db.Create(&user)
+if result.Error != nil {
+    // エラーハンドリング
+    fmt.Println(result.Error)
+    return
+}
+fmt.Println(user)
+
+users := []User{
+    {Name: "John", Age: 25},
+    {Name: "Jane", Age: 30},
+    {Name: "Bob", Age: 20},
+}
+
+result := db.Create(&users)
+if result.Error != nil {
+    // エラーハンドリング
+    fmt.Println(result.Error)
+    return
+}
+
+for _, user := range users {
+    fmt.Println(user)
+}
+
+```
+
+update
+
+```go
+var user User
+db.First(&user, "name = ?", "John")
+
+user.Age = 30
+result := db.Save(&user)
+if result.Error != nil {
+    // エラーハンドリング
+    fmt.Println(result.Error)
+    return
+}
+fmt.Println(user)
+
+var user User
+db.First(&user, "name = ?", "John")
+
+result := db.Model(&user).Update("Age", 30)
+if result.Error != nil {
+    // エラーハンドリング
+    fmt.Println(result.Error)
+    return
+}
+fmt.Println(user)
+```
+このコードでは、まず名前が"John"の最初のUserを取得します。次に、UserのAgeフィールドを更新し、Saveメソッドを使用してこの変更をデータベースに保存します。
+
+Updateメソッドを使用する場合：
+
+Updateメソッドは、指定したフィールドのみを更新します。
+
+このコードでは、まず名前が"John"の最初のUserを取得します。次に、Updateメソッドを使用してUserのAgeフィールドのみを更新します。
+
+これらのメソッドはどちらも更新操作を行いますが、Saveメソッドは全フィールドを更新し、Updateメソッドは指定したフィールドのみを更新するという違いがあります。したがって、使用するメソッドは更新したいフィールドによります。
+
+
+
+```go
+var user User
+db.First(&user, "name = ?", "John")
+
+result := db.Delete(&user)
+if result.Error != nil {
+    // エラーハンドリング
+    fmt.Println(result.Error)
+    return
+}
+fmt.Println("User deleted successfully")
+```
 
 ## Eager Loadingとは
 
@@ -44,10 +194,15 @@ Eager Loadingを使用すると、一度のクエリでUserとそれに関連す
 
 ただし、Eager Loadingは必要以上に多くのデータを取得する可能性があるため、使用する際には注意が必要です。必要なデータだけを取得するために、適切なクエリ戦略を選択することが重要です。
 
-
 ## GormでのEager Loadingの使用
 
-Gormを使ったEager Loadingの例を示します。
-まとめ
 
-記事の内容を簡潔にまとめ、ORMとGormの利用がどのようにデータベース操作を容易にするかを強調します。
+
+Gormを使ったEager Loadingの例を示します。
+
+
+# まとめ
+
+本記事ではORMの概要とGoのORMであるGormを使った基本操作を解説しました。
+
+バックエンドアプリケーションを構築する際にDBの操作の一つとして知っておきたい技術だと考えています。
