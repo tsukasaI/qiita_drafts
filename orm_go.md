@@ -45,7 +45,7 @@ package main
 import (
     "fmt"
     "gorm.io/driver/mysql"
-	"gorm.io/gorm"
+    "gorm.io/gorm"
 )
 
 func main() {
@@ -83,12 +83,13 @@ type User struct {
 
 Gormを使った基本的なデータベース操作（CRUD操作）の例を示します。
 
-Select操作：Gormを使ってデータを取得する方法を説明します。
+### Select操作：Gormを使ってデータを取得する方法を説明します。
 
 ```go
 
 var user User
 result := db.First(&user, "name = ?", "John")
+// SELECT * FROM users WHERE name = 'John' LIMIT 1;
 if result.Error != nil {
     // エラーハンドリング
     fmt.Println(result.Error)
@@ -98,6 +99,7 @@ fmt.Println(user)
 
 var users []User
 result := db.Find(&users, "age >= ?", 18)
+// SELECT * FROM users WHERE age >= 18;
 if result.Error != nil {
     // エラーハンドリング
     fmt.Println(result.Error)
@@ -109,11 +111,24 @@ for _, user := range users {
 
 ```
 
-Insert操作：Gormを使って新しいレコードを挿入する方法を説明します。
+Firstメソッドを使用する場合：
+
+Firstメソッドは、指定した条件に一致する最初のレコードを取得します。
+
+このコードでは、名前が"John"の最初のUserを取得します。
+
+Findメソッドを使用する場合：
+
+Findメソッドは、指定した条件に一致するすべてのレコードを取得します。
+
+このコードでは、年齢が18以上のすべてのUserを取得します。
+
+### Insert操作：Gormを使って新しいレコードを挿入する方法を説明します。
 
 ```go
 user := User{Name: "John", Age: 25}
 result := db.Create(&user)
+// INSERT INTO users (name, age) VALUES ('John', 25);
 if result.Error != nil {
     // エラーハンドリング
     fmt.Println(result.Error)
@@ -128,6 +143,7 @@ users := []User{
 }
 
 result := db.Create(&users)
+// INSERT INTO users (name, age) VALUES ('John', 25), ('Jane', 30), ('Bob', 20);
 if result.Error != nil {
     // エラーハンドリング
     fmt.Println(result.Error)
@@ -140,14 +156,16 @@ for _, user := range users {
 
 ```
 
-update
+### update
 
 ```go
 var user User
 db.First(&user, "name = ?", "John")
 
+user.Name = "John 2"
 user.Age = 30
 result := db.Save(&user)
+// UPDATE users SET name = ?, age = 30 WHERE id = ?;
 if result.Error != nil {
     // エラーハンドリング
     fmt.Println(result.Error)
@@ -159,6 +177,7 @@ var user User
 db.First(&user, "name = ?", "John")
 
 result := db.Model(&user).Update("Age", 30)
+// UPDATE users SET Age = 30 WHERE id = ?;
 if result.Error != nil {
     // エラーハンドリング
     fmt.Println(result.Error)
@@ -177,11 +196,14 @@ Updateメソッドは、指定したフィールドのみを更新します。
 
 これらのメソッドはどちらも更新操作を行いますが、Saveメソッドは全フィールドを更新し、Updateメソッドは指定したフィールドのみを更新するという違いがあります。したがって、使用するメソッドは更新したいフィールドによります。
 
+### delete
+
 ```go
 var user User
 db.First(&user, "name = ?", "John")
 
 result := db.Delete(&user)
+// DELETE FROM users WHERE id = ?;
 if result.Error != nil {
     // エラーハンドリング
     fmt.Println(result.Error)
@@ -194,7 +216,7 @@ fmt.Println("User deleted successfully")
 
 Eager Loadingの概念とその利点を説明します。
 
-Eager Loadingは、ORM（Object-Relational Mapping）におけるデータ取得戦略の一つで、あるエンティティとそれに関連するエンティティを一度のクエリで取得する方法を指します。
+Eager Loadingは、ORMにおけるデータ取得戦略の一つで、あるエンティティとそれに関連するエンティティを一度のクエリで取得する方法を指します。
 
 例えば、UserとOrderのような2つの関連するエンティティがあるとします。UserごとにそのOrderを取得するためには、通常、各Userに対して別々のクエリを発行する必要があります。これはN+1問題として知られており、パフォーマンスの問題を引き起こす可能性があります。
 
@@ -221,6 +243,8 @@ type Order struct {
 
 var user User
 db.Preload("Orders").First(&user, "name = ?", "John")
+// SELECT * FROM users WHERE name = 'John' LIMIT 1;
+// SELECT * FROM orders WHERE user_id = ?;
 for _, order := range user.Orders {
     fmt.Println(order)
 }
