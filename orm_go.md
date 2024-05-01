@@ -81,6 +81,24 @@ type User struct {
 
 ```
 
+上記の構造体では以下のDDLで定義されるテーブルを期待します。
+
+```sql
+CREATE TABLE `users` (
+  `id` bigint unsigned AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255),
+  `age` tinyint unsigned NOT NULL,
+  `birthday` datetime(6),
+  `member_number` varchar(255),
+  `activated_at` datetime(6),
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+```
+
 Gormを使った基本的なデータベース操作（CRUD操作）の例を示します。
 
 ### Select操作：Gormを使ってデータを取得する方法を説明します。
@@ -245,13 +263,11 @@ var user User
 db.Preload("Orders").First(&user, "name = ?", "John")
 // SELECT * FROM users WHERE name = 'John' LIMIT 1;
 // SELECT * FROM orders WHERE user_id = ?;
-for _, order := range user.Orders {
-    fmt.Println(order)
-}
+fmt.Println(user)
 
 ```
 
-このコードでは、Preloadメソッドを使用してOrders関連をEager Loadingします。これにより、名前が"John"のUserとそのすべてのOrderを一度のクエリで取得します。
+このコードでは、Preloadメソッドを使用してOrders関連をEager Loadingします。これにより、名前が"John"のUserとそのすべてのOrderを2つのクエリで取得します。
 
 このように、GormのPreloadメソッドを使用すると、関連するエンティティを効率的に取得することができます。
 
