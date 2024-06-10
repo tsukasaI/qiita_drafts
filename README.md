@@ -23,6 +23,7 @@
 1. pklというAppleのオープンソースの設定ファイルを見てみた https://pkl-lang.org/index.html
 1. ReactでGoogle翻訳使ったらエラーが出た
 1. distrolessというDockerイメージについて
+1. Goのテストにおけるdeferとt.Cleanupの違い
 
 1. curlでいろんな結果を見るならwオプションが便利だった
 
