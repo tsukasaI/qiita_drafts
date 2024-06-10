@@ -4,7 +4,6 @@
 
 1. algorithmの勉強でやったソートをGoでまとめる
 1. orverload
-1. レートリミットの解説と実装
 1. イベントソースの例と実装
 1. Rustの基本勉強
     1. メモリ周り
@@ -22,6 +21,8 @@
 1. Larevelで名言を表示する php artisan inspire が誰得だった
 1. AWSの構成図とかER図はDraw.ioをVSCodeで作成してGitHubで管理しませんか
 1. pklというAppleのオープンソースの設定ファイルを見てみた https://pkl-lang.org/index.html
+1. ReactでGoogle翻訳使ったらエラーが出た
+1. distrolessというDockerイメージについて
 
 1. curlでいろんな結果を見るならwオプションが便利だった
 
