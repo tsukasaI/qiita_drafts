@@ -21,8 +21,6 @@
 1. Larevelで名言を表示する php artisan inspire が誰得だった
 1. AWSの構成図とかER図はDraw.ioをVSCodeで作成してGitHubで管理しませんか
 1. pklというAppleのオープンソースの設定ファイルを見てみた https://pkl-lang.org/index.html
-1. ReactでGoogle翻訳使ったらエラーが出た
-1. distrolessというDockerイメージについて
 1. Goのテストにおけるdeferとt.Cleanupの違い
 1. コードファーストとスキーマファーストどう採用するか
 
