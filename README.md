@@ -4,7 +4,6 @@
 
 1. algorithmの勉強でやったソートをGoでまとめる
 1. orverload
-1. イベントソースの例と実装
 1. Rustの基本勉強
     1. メモリ周り
     1. 構造体とかimplとか
@@ -25,17 +24,9 @@
 1. コードファーストとスキーマファーストどう採用するか
 1. プロセスとスレッドを理解する
 
-1. curlでいろんな結果を見るならwオプションが便利だった
-
-curl --request GET \
- -w"http_code: %{http_code}\ntime_namelookup: %{time_namelookup}\ntime_connect: %{time_connect}\ntime_appconnect: %{time_appconnect}\ntime_pretransfer: %{time_pretransfer}\ntime_starttransfer: %{time_starttransfer}\ntime_total: %{time_total}\n" -o /dev/null \
- --url https://dev-api.wellness.auone.jp/v2/presents
-
 - Goでmockを自動生成
 
 docker run -v "$PWD":/src -w /src vektra/mockery --all
-
-
 
 ```
   private getKeys<T extends { [key: string]: unknown }>(obj: T): (keyof T)[] {
