@@ -1,0 +1,1 @@
+# Goのテストのdeferとt.Cleanupの差
