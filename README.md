@@ -19,6 +19,7 @@
 1. pklというAppleのオープンソースの設定ファイルを見てみた https://pkl-lang.org/index.html
 1. Goのテストにおけるdeferとt.Cleanupの違い
 1. コードファーストとスキーマファーストどう採用するか
+1. インターフェースを丁寧に説明して見る
 - Goでmockを自動生成
 
 docker run -v "$PWD":/src -w /src vektra/mockery --all
