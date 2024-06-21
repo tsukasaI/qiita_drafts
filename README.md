@@ -5,7 +5,6 @@
 1. algorithmの勉強でやったソートをGoでまとめる
 1. orverload
 1. Rustの基本勉強
-    1. メモリ周り
     1. 構造体とかimplとか
 1. GoとRedis使った備忘録
 1. スケールするWebアプリケーションの設計
@@ -19,7 +18,10 @@
 1. pklというAppleのオープンソースの設定ファイルを見てみた https://pkl-lang.org/index.html
 1. Goのテストにおけるdeferとt.Cleanupの違い
 1. コードファーストとスキーマファーストどう採用するか
-1. インターフェースを丁寧に説明して見る
+1. GoのNamed Return Valueの使いどころまとめ
+1. Goのtrue/falseの定義（ 0 == 0, 0 != 0）
+1. エラーハンドリングの良しあしについての個人的意見
+1. 個人的によく使うVSCodeのショートカット
 - Goでmockを自動生成
 
 docker run -v "$PWD":/src -w /src vektra/mockery --all
