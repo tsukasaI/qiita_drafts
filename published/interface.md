@@ -37,3 +37,67 @@
 さてここまで身近なものに例えてみたので今後はプログラムの世界でのインターフェースを見てみます。
 
 現実世界でのインターフェースは機械を使いましたがプログラムの世界ではクラスやメソッドの仕様を定義するためのものとして使われます。
+
+例えばGoのinterfaceはメソッドの集まりを定義するためのものです。
+
+自動販売機の例で言うと、お金を入れることで商品が出てくるという動きを期待しているので、その動きを定義すると以下のように考えられます。
+
+```go
+type VendinMachine interface {
+    GetItem(int) string
+}
+
+// 飲み物の自動販売機
+type DrinkVendingMachine struct {
+    Items []string
+}
+
+func (d DrinkVendingMachine) GetItem() string {
+    return d.Items[0]
+}
+
+// お菓子の自動販売機
+type SnackVendingMachine struct {
+    Items []string
+}
+
+func (s SnackVendingMachine) GetItem() string {
+    return s.Items[0]
+}
+
+```
+これらの例では、自動販売機のinterfaceを定義して、飲み物/お菓子それぞれの自動販売機がそのinterfaceを満たすように実装しています。
+
+interfaceを満たすメソッドを実装することで自動販売機のinterfaceを満たすことができ、以下のように利用することができます。
+
+```go
+
+func main() {
+    drinkVendingMachine := getDrinkVendingMachine()
+    snackVendingMachine := getSnackVendingMachine()
+
+    fmt.Println(drinkVendingMachine.GetItem()) // コーラ
+    fmt.Println(snackVendingMachine.GetItem()) // ポテトチップス
+}
+
+func getDrinkVendingMachine() VendinMachine {
+    return DrinkVendingMachine{Items: []string{"コーラ", "オレンジジュース"}}
+}
+
+func getSnackVendingMachine() VendinMachine {
+    return SnackVendingMachine{Items: []string{"ポテトチップス", "チョコレート"}}
+}
+
+```
+
+ここでのポイントはdrinkVendingMachineやsnackVendingMachineはそれぞれの自動販売機のインターフェースを満たすように実装されているので、それぞれのインスタンスをVendinMachine型として扱うことができています。
+
+仮に各structの中身が入れ替わったとしてもGetItemメソッドがあればそれを利用することができるので、interfaceを使うことで柔軟にプログラムを書くことができます。
+
+これのメリットはDBサーバーを変更したり、APIサーバーを変更したりする際に、特定のメソッドを有するinterfaceを使うことでその変更に対して柔軟に対応することができるということです。
+
+interface(抽象)に依存することで柔軟に変更に対応できるというのがinterfaceのメリットです。
+
+## まとめ
+
+具体的な実装に依存することなく変更に強いプログラムを書くためにinterfaceへの理解を深めましょう！
