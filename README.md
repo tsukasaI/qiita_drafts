@@ -18,7 +18,6 @@
 1. pklというAppleのオープンソースの設定ファイルを見てみた https://pkl-lang.org/index.html
 1. Goのテストにおけるdeferとt.Cleanupの違い
 1. コードファーストとスキーマファーストどう採用するか
-1. GoのNamed Return Valueの使いどころまとめ
 1. Goのtrue/falseの定義（ 0 == 0, 0 != 0）
 1. エラーハンドリングの良しあしについての個人的意見
 1. 個人的によく使うVSCodeのショートカット
