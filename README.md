@@ -6,7 +6,6 @@
 1. orverload
 1. Rustの基本勉強
     1. 構造体とかimplとか
-1. GoとRedis使った備忘録
 1. スケールするWebアプリケーションの設計
     1. キャッシュの基本
 1. Goにおけるキャッシュの使われどころ調べる
@@ -18,9 +17,12 @@
 1. pklというAppleのオープンソースの設定ファイルを見てみた https://pkl-lang.org/index.html
 1. Goのテストにおけるdeferとt.Cleanupの違い
 1. コードファーストとスキーマファーストどう採用するか
-1. Goのtrue/falseの定義（ 0 == 0, 0 != 0）
 1. エラーハンドリングの良しあしについての個人的意見
 1. 個人的によく使うVSCodeのショートカット
+1. Golangの空の構造体 https://zenn.dev/mkosakana/articles/e24f4a3aeb3027
+1. 関数のカリー化 って何
+1. VScodeのショートカットを極限まで使いこなす
+1. context.Contextを感覚的に理解する
 - Goでmockを自動生成
 
 docker run -v "$PWD":/src -w /src vektra/mockery --all
