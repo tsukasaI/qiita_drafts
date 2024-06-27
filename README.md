@@ -20,9 +20,10 @@
 1. エラーハンドリングの良しあしについての個人的意見
 1. 個人的によく使うVSCodeのショートカット
 1. Golangの空の構造体 https://zenn.dev/mkosakana/articles/e24f4a3aeb3027
-1. 関数のカリー化 って何
 1. VScodeのショートカットを極限まで使いこなす
 1. context.Contextを感覚的に理解する
+1. DynamoDBをローカルで動かしてデータを入れたり見たりする
+1. Dockerのコンテナ、イメージ、ボリューム、キャッシュなどを一括で削除する
 - Goでmockを自動生成
 
 docker run -v "$PWD":/src -w /src vektra/mockery --all
