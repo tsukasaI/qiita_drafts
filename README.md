@@ -23,7 +23,6 @@
 1. VScodeのショートカットを極限まで使いこなす
 1. context.Contextを感覚的に理解する
 1. DynamoDBをローカルで動かしてデータを入れたり見たりする
-1. Dockerのコンテナ、イメージ、ボリューム、キャッシュなどを一括で削除する
 - Goでmockを自動生成
 
 docker run -v "$PWD":/src -w /src vektra/mockery --all
