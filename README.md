@@ -15,12 +15,11 @@
 1. こんなコマンドあったんだ git log --graph
 1. AWSの構成図とかER図はDraw.ioをVSCodeで作成してGitHubで管理しませんか
 1. pklというAppleのオープンソースの設定ファイルを見てみた https://pkl-lang.org/index.html
-1. Goのテストにおけるdeferとt.Cleanupの違い
 1. コードファーストとスキーマファーストどう採用するか
 1. エラーハンドリングの良しあしについての個人的意見
 1. 個人的によく使うVSCodeのショートカット
-1. Golangの空の構造体 https://zenn.dev/mkosakana/articles/e24f4a3aeb3027
 1. VScodeのショートカットを極限まで使いこなす
+1. Golangの空の構造体 https://zenn.dev/mkosakana/articles/e24f4a3aeb3027
 1. context.Contextを感覚的に理解する
 1. DynamoDBをローカルで動かしてデータを入れたり見たりする
 - Goでmockを自動生成
