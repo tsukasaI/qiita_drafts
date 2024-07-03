@@ -6,6 +6,24 @@ https://code.visualstudio.com/shortcuts/keyboard-shortcuts-macos.pdf
 
 環境はMacです。
 
+## コーディング
+
+### 任意の位置から改行
+
+`Cmd + Enter` : カーソルの位置から改行
+
+`Cmd + Shift + Enter` : カーソルの位置から上に改行
+
+### 一行コピー/切り取り
+
+選択していない状態で以下のショートカットを押すと、カーソルがある行全体で動作する。
+
+`Cmd + c` : 一行コピー
+
+`Cmd + x` : 一行切り取り
+
+
+
 ## ファイル名検索
 
 `Cmd + P` : ファイル名検索
@@ -13,7 +31,6 @@ https://code.visualstudio.com/shortcuts/keyboard-shortcuts-macos.pdf
 ## ターミナルの表示
 
 `Cmd + j` : ターミナルの表示
-
 
 ## 検索
 
@@ -33,11 +50,9 @@ files to include: `*.go` or `src/`
 
 files to exclude: `*_test.go`
 
-### 大文字小文字を区別する or しないを設定
-
-
-
 ### 正規表現
+
+知っているか、VSCodeの検索バーに正規表現を使うことができることを。
 
 `Cmd + F` : 検索バーを表示
 
