@@ -1,5 +1,7 @@
 # VSCodeをサクサク使うための小技
 
+https://code.visualstudio.com/shortcuts/keyboard-shortcuts-macos.pdf
+
 ショートカットを使ってサクサクに開発を進めるための小技をまとめていきます。
 
 環境はMacです。

@@ -22,6 +22,7 @@
 1. Golangの空の構造体 https://zenn.dev/mkosakana/articles/e24f4a3aeb3027
 1. context.Contextを感覚的に理解する
 1. DynamoDBをローカルで動かしてデータを入れたり見たりする
+1. TypeScriptでデコレータを定義
 - Goでmockを自動生成
 
 docker run -v "$PWD":/src -w /src vektra/mockery --all
