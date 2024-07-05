@@ -1,46 +1,49 @@
 package main
 
-import "fmt"
-
-type node struct {
-	val   int
-	left  *node
-	right *node
-}
-
-func bfs(root *node) []int {
-	if root == nil {
-		return []int{}
-	}
-
-	queue := []*node{root}
-	result := make([]int, 0)
-
-	for len(queue) > 0 {
-		current := queue[0]
-		queue = queue[1:]
-		result = append(result, current.val)
-
-		if current.left != nil {
-			queue = append(queue, current.left)
-		}
-
-		if current.right != nil {
-			queue = append(queue, current.right)
-		}
-	}
-
-	return result
-}
+import (
+	"fmt"
+)
 
 func main() {
-	root := &node{val: 1}
-	root.left = &node{val: 2}
-	root.right = &node{val: 3}
-	root.left.left = &node{val: 4}
-	root.left.right = &node{val: 5}
-	root.right.left = &node{val: 6}
-	root.right.right = &node{val: 7}
+	ints := []int{1, 2, 3, 4, 5}
+	fmt.Println("[]int{1, 2, 3, 4, 5}のlen:", len(ints))
+	fmt.Println("[]int{1, 2, 3, 4, 5}のrange")
+	for i, v := range ints {
+		fmt.Println(i, v)
+	}
 
-	fmt.Println(bfs(root))
+	var nilSlice []int
+	fmt.Println("nilSliceのlen:", len(nilSlice))
+	fmt.Println("nilSliceのrange")
+	for i, v := range nilSlice {
+		fmt.Println(i, v)
+	}
+
+	emptySlice := []int{}
+	fmt.Println("[]int{}のlen:", len(emptySlice))
+	fmt.Println("[]int{}のrange")
+	for i, v := range emptySlice {
+		fmt.Println(i, v)
+	}
+
+	kv := map[string]int{"a": 1, "b": 2, "c": 3}
+	fmt.Println("map[string]int{\"a\": 1, \"b\": 2, \"c\": 3}のlen:", len(kv))
+	fmt.Println("map[string]int{\"a\": 1, \"b\": 2, \"c\": 3}のrange")
+	for k, v := range kv {
+		fmt.Println(k, v)
+	}
+
+	var nilMap map[string]int
+	fmt.Println("nilMapのlen:", len(nilMap))
+	fmt.Println("nilMapのrange")
+	for k, v := range nilMap {
+		fmt.Println(k, v)
+	}
+
+	emptyMap := map[string]int{}
+	fmt.Println("map[string]int{}のlen:", len(emptyMap))
+	fmt.Println("map[string]int{}のrange")
+	for k, v := range emptyMap {
+		fmt.Println(k, v)
+	}
 }
