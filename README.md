@@ -6,8 +6,6 @@
 1. orverload
 1. Rustの基本勉強
     1. 構造体とかimplとか
-1. スケールするWebアプリケーションの設計
-    1. キャッシュの基本
 1. Goにおけるキャッシュの使われどころ調べる
 1. Goの1.22のnet/http ServeMuxがよさげ
 1. プロジェクトのディレクトリ構成でよくある形と意味
@@ -17,9 +15,6 @@
 1. pklというAppleのオープンソースの設定ファイルを見てみた https://pkl-lang.org/index.html
 1. コードファーストとスキーマファーストどう採用するか
 1. エラーハンドリングの良しあしについての個人的意見
-1. 個人的によく使うVSCodeのショートカット
-1. VScodeのショートカットを極限まで使いこなす
-1. Golangの空の構造体 https://zenn.dev/mkosakana/articles/e24f4a3aeb3027
 1. context.Contextを感覚的に理解する
 1. DynamoDBをローカルで動かしてデータを入れたり見たりする
 1. TypeScriptでデコレータを定義
