@@ -13,15 +13,12 @@
 1. こんなコマンドあったんだ git log --graph
 1. AWSの構成図とかER図はDraw.ioをVSCodeで作成してGitHubで管理しませんか
 1. pklというAppleのオープンソースの設定ファイルを見てみた https://pkl-lang.org/index.html
-1. コードファーストとスキーマファーストどう採用するか
 1. エラーハンドリングの良しあしについての個人的意見
 1. context.Contextを感覚的に理解する
 1. DynamoDBをローカルで動かしてデータを入れたり見たりする
 1. TypeScriptでデコレータを定義
-1. デバッグツールの使い方
 1. プロジェクトの事始め ~ ルール、初期構築、ドキュメント管理、コミュニケーションフロー ~
 1. あってほしいドキュメント、なくてもいいドキュメント
-1. Webサービスを作成する際のセキュリティ対策
 - Goでmockを自動生成
 
 docker run -v "$PWD":/src -w /src vektra/mockery --all
