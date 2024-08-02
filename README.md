@@ -2,6 +2,11 @@
 
 ## future
 
+1. asdfでバージョン管理
+1. コンテナ使う？ホストマシン使う？
+1. 脱・Dokcer Desktop colimaでDockerを動かす
+1. go.workでworkspace管理ができるってよ
+
 1. algorithmの勉強でやったソートをGoでまとめる
 1. orverload
 1. Rustの基本勉強
