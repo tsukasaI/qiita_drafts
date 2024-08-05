@@ -6,6 +6,8 @@
 1. コンテナ使う？ホストマシン使う？
 1. 脱・Dokcer Desktop colimaでDockerを動かす
 1. go.workでworkspace管理ができるってよ
+1. OIDC/CBIAとか認証認可周りの動向
+1. App2App for Bank Auth
 
 1. algorithmの勉強でやったソートをGoでまとめる
 1. orverload
