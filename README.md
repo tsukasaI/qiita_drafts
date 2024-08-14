@@ -9,6 +9,7 @@
 1. OIDC/CBIAとか認証認可周りの動向
 1. App2App for Bank Auth
 1. Introduction Pre-commit tool Lefthook
+1. 冪等性についてまとめる
 
 1. algorithmの勉強でやったソートをGoでまとめる
 1. orverload
