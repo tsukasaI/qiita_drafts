@@ -76,7 +76,7 @@ message Person {
 }
 ```
 
-`syntax = "proto3";`はバージョンの宣言で特段理由がなければ3を使いましょう。
+`syntax = "proto3";`はバージョンの宣言で特段理由がなければproto3を使いましょう。
 
 messageは複数のフィールドを持つことができ、各フィールドは型情報、フィールド名、数値を設定します。
 
@@ -264,7 +264,7 @@ func callListSample(client pb.SampleServiceClient) {
 
 特に難しいことはしておらず`grpc.NewClient("localhost:50051", grpc.WithInsecure())`でクライアントのインスタンスを生成して自動生成されたメソッドを呼び出しています。
 
-'grpc.WithInsecure()'は通信を暗号化せずに行うため本番環境で使う際には注意しましょう。
+`grpc.WithInsecure()`は通信を暗号化せずに行うため本番環境で使う際には注意しましょう。
 
 続いてサーバー側の実装。
 
