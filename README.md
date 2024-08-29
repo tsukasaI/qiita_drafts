@@ -11,6 +11,9 @@
 1. Introduction Pre-commit tool Lefthook
 1. 冪等性についてまとめる
 1. test container がテストに使えそうな
+1. モジュラーモノリスの考え方
+1. GQL Federation https://netflixtechblog.com/how-netflix-scales-its-api-with-graphql-federation-part-1-ae3557c187e2
+1. connect-goが便利っぽい
 
 1. algorithmの勉強でやったソートをGoでまとめる
 1. orverload
