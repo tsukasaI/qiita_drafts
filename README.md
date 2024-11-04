@@ -2,19 +2,21 @@
 
 ## future
 
-1. asdfでバージョン管理
+1. asdfでバージョン管理 -> miseでバージョン管理 + direnvの置き換え
 1. コンテナ使う？ホストマシン使う？
 1. 脱・Dokcer Desktop colimaでDockerを動かす
 1. go.workでworkspace管理ができるってよ
-1. OIDC/CBIAとか認証認可周りの動向
-1. App2App for Bank Auth
+1. OIDC/CIBAとか認証認可周りの歴史と動向
+1. App2App for Auth
 1. Introduction Pre-commit tool Lefthook
+1. Secret lint
 1. 冪等性についてまとめる
 1. test container がテストに使えそうな
 1. モジュラーモノリスの考え方
 1. GQL Federation https://netflixtechblog.com/how-netflix-scales-its-api-with-graphql-federation-part-1-ae3557c187e2
 1. connect-goが便利っぽい
 1. Golang Functional Options Pattern https://golang.cafe/blog/golang-functional-options-pattern.html
+1. Kubernetes入門
 
 1. jsのformatter, linterはbiomeが早くていい感じ
 1. algorithmの勉強でやったソートをGoでまとめる
