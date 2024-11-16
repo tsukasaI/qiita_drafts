@@ -17,6 +17,7 @@
 1. connect-goが便利っぽい
 1. Golang Functional Options Pattern https://golang.cafe/blog/golang-functional-options-pattern.html
 1. Kubernetes入門
+1. Google Cloud Professional Architectの勉強
 
 1. jsのformatter, linterはbiomeが早くていい感じ
 1. algorithmの勉強でやったソートをGoでまとめる
