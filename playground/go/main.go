@@ -47,3 +47,24 @@ func main() {
 		fmt.Println(k, v)
 	}
 }
+
+func CompareStrings(a, b string) bool {
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func IsEuqalIntSlice(a, b []byte) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}
