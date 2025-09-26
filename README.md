@@ -15,7 +15,6 @@
 1. モジュラーモノリスの考え方
 1. GQL Federation https://netflixtechblog.com/how-netflix-scales-its-api-with-graphql-federation-part-1-ae3557c187e2
 1. connect-goが便利っぽい
-1. Golang Functional Options Pattern https://golang.cafe/blog/golang-functional-options-pattern.html
 1. Kubernetes入門
 1. Google Cloud Professional Architectの勉強
 

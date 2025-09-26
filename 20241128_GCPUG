@@ -1,0 +1,21 @@
+Cloud Run
+
+# 認証認可
+
+id token with Authorization header
+
+how to identify?
+
+## IAM
+
+Auth header with id_token (invoke permission)
+
+LB + Identity-Aware Proxy
+
+caution: inside or outside Auth
+
+service extensions
+
+# Cloud Service Mesh
+
+service mesh -> infra for http route (like a middleware)
